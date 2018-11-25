@@ -16,7 +16,8 @@ require('./models/User');
 require('./models/UserToken');
 
 const index = require('./routes/index'),
-      tokenReq = require('./routes/usertoken');
+      tokenReq = require('./routes/usertoken'),
+      student = require('./routes/student');
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use(passport.session());
 
 app.use('*', tokenReq);
 app.use('/', index);
+app.use('/student')
 
 app.use((req, res, next) => {
   var err = new Error('Not Found');

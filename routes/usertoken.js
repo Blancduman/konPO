@@ -5,7 +5,7 @@ const router = require('express').Router();
       UserToken = mongoose.model('UserToken'),
       asyncMiddleware = require('../middleware/asyncmiddleware'),
       setCookie = require('../lib/setcookie'),
-      registerUser = require('../controllers/Ctr_usertoken').registerUser;
+      registerUser = require('../controllers/usertoken').registerUser;
 
 // const registerUser = async (req, res, username) => {
 //   await UserToken.updateOne({username}, {$set: {uuidv4()}});

@@ -1,4 +1,4 @@
-extends ./includes/login/layout
+extends ./includes/guest/layout
 
 block content
   .col-md-7.col-lg-6.col-sm-12.relative.m-auto
@@ -13,9 +13,9 @@ block content
       .form-group
         input(type="password", name="password2", placeholder="Повторите пароль").form-control.form-input-login
       .form-group
-        input(type="text", name="lastname", placeholder="Имя").form-control.form-input-login
+        input(type="text", name="firstname", placeholder="Имя").form-control.form-input-login
       .form-group
-        input(type="text", name="firstname", placeholder="Фамилия").form-control.form-input-login
+        input(type="text", name="lastname", placeholder="Фамилия").form-control.form-input-login
       .form-group
         input(type="text", name="middlename", placeholder="Отчество").form-control.form-input-login
       .form-group

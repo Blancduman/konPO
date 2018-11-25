@@ -34,7 +34,7 @@ module.exports.UserLogin = (req, res, next) => {
           })
           .catch(next);
       } else {
-        return res.redirect('/profile');
+        return res.redirect('/student/profile');
       }
     });
   })(req, res, next);

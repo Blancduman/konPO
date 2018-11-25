@@ -1,0 +1,72 @@
+extends ./includes/layout
+
+block content
+  .row
+    .col-12
+      nav.navbar.navbar-expand-lg.navbar-dark
+        a(href="/respositories").navbar-brand
+          img(src="/images/logo.png", alt=user.firstname).img-fluid
+        button(type="button", data-toggle="collapse", data-target="#navbarSupportedContent", aria-controls="navbarSupportedContent", aria-expanded="false", aria-label="Toggle navigation").navbar-toggler
+          span.navbar-toggler-icon
+        div(id="navbarSupportedContent").collapse.navbar-collapse
+          ul.navbar-nav.ml-auto
+            li.nav-item
+              a(href="/access", data-toggle="tooltip", data-placement="top", title="Здесь отображаются репозитории, преподаватели которых дали вам доступ.").nav-link ДОСТУПНЫЕ РЕПОЗИТОРИИ
+            li.nav-item
+              a(href="/repositories/closed", data-toggle="tooltip", data-placement="top", title="Здесь отображаются ваши закрытые репозитории.").nav-link ЗАКРЫТЫЕ
+            li.nav-item
+              a(href="/repositories", data-toggle="tooltip", data-placement="top", title="Здесь отображаются ваши текущие репозитории.").nav-link РЕПОЗИТОРИИ
+            li.nav-item.dropdown
+              a(id="navbarDropdown", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false").nav-link.dropdown-toggle.btn.btn-sm.btn-secondary #{user.firstname}
+              div(aria-labelledby="navbarDropdown").dropdown-menu
+                a(href="/repository/new", data-toggle="tooltip", data-placement="left", title="Создать новый репозиторий для курсовой работы.").dropdown-item Новый репозиторий
+                a(href="/repository/new", data-toggle="tooltip", data-placement="left", title="Открывается страница с вашими данными.").dropdown-item Профиль
+                .dropdown-divider
+                a(href="/repository/new", data-toggle="tooltip", data-placement="left", title="Выйти из вашего аккаунта.").dropdown-item Выйти
+
+  .row
+    .mx-auto.col-md-4.col-lg-4.col-sm-12
+      .text-center.pb-2
+        h4.text-primary Фотография
+        img(src=user.image, alt=user.firstname).avatar.img-circle.img-thumbnail
+      .custom-file
+        input(type="file", name="newprofilepicture", id="validatedCustomFile").custom-fire-input
+        label(for="validatedCustomFile").custom-file-label Загрузить...
+    .mx-auto.col-md-8.col-lg-8.col-sm-12
+      form(action="/profile", method="put").form
+        .form-group
+          .col-xs-6
+            label(for="firstname")
+              h4.text-primary Имя
+            input(type="text", name="firstname", placeholder=user.firstname, title="Введите имя.").form-control
+        .form-group
+          .col-xs-6
+            label(for="lastname")
+              h4.text-primary Фамилия
+            input(type="text", name="lastname", placeholder=user.lastname, title="Введите фамилию.").form-control
+        .form-group
+          .col-xs-6
+            label(for="middlename")
+              h4.text-primary Отчество
+            input(type="text", name="middlename", placeholder=user.middlename, title="Введите отчество").form-control
+        .form-group
+          .col-xs-6
+            label(for="phone")
+              h4.text-primary Телефон
+            input(type="text", name="phone", placeholder=user.phone, title="Введите номер телефона").form-control
+        .form-group
+          .col-xs-6
+            label(for="password")
+              h4.text-primary Пароль
+            input(type="password", name="password", placeholder="Пароль.", title="Введите пароль.").form-control
+        .form-group
+          .col-xs-6
+            label(for="password2")
+              h4.text-primary Пароль
+            input(type="text", name="password2", placeholder="Повторите пароль.", title="Повторите пароль.").form-control
+        .form-group
+          .col-xs-12
+            br
+            button(type="submit").btn.btn-lg.btn-primary
+              i.glyphicon.glyphicon-ok-sign
+              | Сохранить

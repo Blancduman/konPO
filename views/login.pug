@@ -1,0 +1,18 @@
+extends ./login/layout
+
+block content
+  .col-md-7.col-lg-6.col-sm-12.relative.m-auto
+    h1.text-center.text-primary Вход
+    form(action="/login", method="post")
+      .form-group
+        input#(type="email", name="email", placeholder="Почта")
+      .form-group
+        input#(type="password", name="password", placeholder="Пароль")
+      .form-check
+        input#(type="checkbox", name="remember").form-check-input
+        label(for="remember", style="color: #e38c8c;") Запомнить
+      .form-group
+        input(type="submit", value="Вход").btn.btn-secondary.btn-lg.btn-block
+      .form-group.d-flex.justify-content-around
+        a(href="/forgot") Забыл Пароль
+        a(href="/forgot") Регистрация

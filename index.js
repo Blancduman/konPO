@@ -48,11 +48,13 @@ app.use(passport.session());
 
 app.use('*', tokenReq);
 app.use('/', index);
-app.use('/student')
+app.use('/student', student)
 
 app.use((req, res, next) => {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
+
+app.listen(3000, () => console.log('Port 3000'));
 

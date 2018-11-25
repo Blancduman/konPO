@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const UserTokenSchema = new mongoose.Schema({
   username: {
-    type: string
+    type: String
   },
   series: {
     type: String

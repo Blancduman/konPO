@@ -4,7 +4,8 @@ const mongoose = require('mongoose'),
       setCookie = require('../lib/setcookie');
 
 module.exports.registerUser = async (req, res, username) => {
-  await UserToken.updateOne({username}, {$set: {uuidv4()}});
+  let token = uuidv4();
+  await UserToken.updateOne({username}, {$set: {token}});
   let userToken = await UserToken.findOne({username});
   setCookie(res, userToken);
   let user = await User.findOne({username});

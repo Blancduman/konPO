@@ -14,6 +14,9 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.database, {useNewUrlParser: true});
 require('./models/User');
 require('./models/UserToken');
+require('./models/Repository');
+require('./models/Section');
+require('./models/Task');
 
 const index = require('./routes/index'),
       tokenReq = require('./routes/usertoken'),

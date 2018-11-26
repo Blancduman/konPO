@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
   middlename: String,
+  phone: String,
   image: String,
   repositories: [{
     type: mongoose.Schema.Types.ObjectId, 

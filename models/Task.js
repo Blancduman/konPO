@@ -6,7 +6,7 @@ var TaskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, ref: 'Section'
   },
   status: {
-    type: boolean,
+    type: Boolean,
     default: false
   }
 }, {timestamps: true});

@@ -8,7 +8,7 @@ module.exports.UserLogin = (req, res, next) => {
   passport.authenticate('localUsers', (err, user) => {
     if (err) {return next(err);}
     if (!user) {
-      req.flash('message', ' укажите правильный логин и пароль!');
+      req.flash('message', ' укажите логин и пароль!');
       return res.redirect('/');
     }
     req.logIn(user, function(err) {
@@ -28,13 +28,14 @@ module.exports.UserLogin = (req, res, next) => {
               .save()
               .then(user => {
                 setCookie(res, {series: user.series, token: user.token, username: user.username});
-                return res.redirect('/profile');
+                if (user.role === 'STUDENT')
+                  return res.redirect('/student/profile');
               })
               .catch(next);
           })
           .catch(next);
       } else {
-        return res.redirect('/student/profile');
+        return user.role === 'STUDENT' ? res.redirect('/student/profile') : res.redirect('/login');
       }
     });
   })(req, res, next);

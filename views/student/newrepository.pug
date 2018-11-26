@@ -1,0 +1,18 @@
+extends ./includes/layout
+
+block content
+  link(rel="stylesheet" href="stylesheets/bootstrap-select.css")
+  .row
+    .mx-auto.col-md-7.col-lg-6.col-sm-12
+      form(action="/newrepository", method="post")
+        .form-group
+          label(for="newrepo").text-primary Название репозитория
+          input(type="text", name="newrepo", placeholder="Название репозитория").form-control
+        .form-group
+          label(for="teachers").text-primary
+          select(multiple, data-live-search="true", name="teachers").selectpicker.form-control
+            option(value="asdf") Teacher 1
+            option(value="asdf2") Teacher 2
+            option(value="asdf3") Teacher 3
+        .form-group
+          button(type="submit").form-control.btn.btn-primary Создать

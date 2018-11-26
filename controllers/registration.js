@@ -14,6 +14,7 @@ module.exports.UserRegistration = function(req, res, next) {
           firstname: req.body.firstname,
           lastname: req.body.lastname,
           middlename: req.body.middlename,
+          phone: req.body.phone,
           image: 'https://pp.userapi.com/c851528/v851528089/5242f/15BkorO2nJE.jpg',
           role: 'STUDENT',
         });

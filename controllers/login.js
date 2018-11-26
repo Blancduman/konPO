@@ -6,7 +6,9 @@ const passport = require('passport'),
 
 module.exports.UserLogin = (req, res, next) => {
   passport.authenticate('localUsers', (err, user) => {
-    if (err) {return next(err);}
+    if (err) { console.log(err);
+      return next(err);}
+    console.log(user.role);
     if (!user) {
       req.flash('message', ' укажите логин и пароль!');
       return res.redirect('/');
@@ -21,6 +23,7 @@ module.exports.UserLogin = (req, res, next) => {
         data.token = uuidv4();
         data.username = user.username;
         let recordDb = new UserToken(data);
+        console.log(recordDb);
         UserToken
           .remove({username: user.username})
           .then(user => {
@@ -28,8 +31,11 @@ module.exports.UserLogin = (req, res, next) => {
               .save()
               .then(user => {
                 setCookie(res, {series: user.series, token: user.token, username: user.username});
+                console.log(user.role);
                 if (user.role === 'STUDENT')
                   return res.redirect('/student/profile');
+                if (user.role === 'ADMIN')
+                  return res.redirect('/admin/index');
               })
               .catch(next);
           })

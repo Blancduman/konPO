@@ -7,20 +7,8 @@ const router = require('express').Router();
       setCookie = require('../lib/setcookie'),
       registerUser = require('../controllers/usertoken').registerUser;
 
-// const registerUser = async (req, res, username) => {
-//   await UserToken.updateOne({username}, {$set: {uuidv4()}});
-//   let userToken = await UserToken.findOne({username});
-//   setCookie(res, userToken);
-//   let user = await User.findOne({username});
-//   return new Promise((resolve, reject) => {
-//     req.logIn(user, err => {
-//       if (err) {reject(err);}
-//       resolve();
-//     });
-//   });
-// };
-
 router.get('/', asyncMiddleware(async (req, res, next) => {
+  console.log(req.cookies.usertoken);
   if (!!req.cookies.usertoken) {
     let objTokens = JSON.parse(req.cookies.usertoken),
         username = objTokens.username;

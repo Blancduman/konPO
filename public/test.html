@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>asd</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pettify.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap-duallistbox.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="js/run_prettify.min.js"></script>
+    <script src="js/jquery.bootstrap-duallistbox.js"></script>
+  </head>
+  <body>
+    <div class="col-md-7">
+      <form id="demoform" action="#" method="post">
+      <select multiple="multiple" size="10" name="duallistbox_demo2" class="demo2">
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3" selected="selected">Option 3</option>
+        <option value="option4">Option 4</option>
+        <option value="option5">Option 5</option>
+        <option value="option6" selected="selected">Option 6</option>
+        <option value="option7">Option 7</option>
+        <option value="option8">Option 8</option>
+        <option value="option9">Option 9</option>
+        <option value="option0">Option 10</option>
+        <option value="option0">Option 11</option>
+        <option value="option0">Option 12</option>
+        <option value="option0">Option 13</option>
+        <option value="option0">Option 14</option>
+        <option value="option0">Option 15</option>
+        <option value="option0">Option 16</option>
+        <option value="option0">Option 17</option>
+        <option value="option0">Option 18</option>
+        <option value="option0">Option 19</option>
+        <option value="option0">Option 20</option>
+      </select>
+      <br>
+      <button type="submit" class="btn btn-default btn-block">Submit data</button>
+      </form>
+    </div>
+    <script>
+      var demo2 = $('.demo2').bootstrapDualListbox({
+        nonSelectedListLabel: 'Non-selected',
+        selectedListLabel: 'Selected',
+        preserveSelectionOnMove: 'moved',
+        moveOnSelect: false,
+        nonSelectedFilter: ''
+      });
+    </script>
+  </body>
+</html>

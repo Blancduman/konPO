@@ -1,4 +1,22 @@
 extends ./includes/layout
 
 block content
-  
+  .col-md-10
+    form(action="/admin/teachers", method="post", id="dform")
+      select(multiple="multiple", size="10", name="duallistbox" class="demo2")
+        each teacher in teachers
+          if teacher.status
+            option(value=teacher._id, selected="selected") #{teacher.lastname} #{teacher.firstname} #{teacher.middlename}
+          else
+            option(value=teacher._id) #{teacher.lastname} #{teacher.firstname} #{teacher.middlename}
+      br
+      button(type="submit").btn.btn-default.btn-block Подтвердить
+    script.
+       var demo2 = $('.demo2').bootstrapDualListbox({
+        nonSelectedListLabel: 'Non-selected',
+        selectedListLabel: 'Selected',
+        preserveSelectionOnMove: 'moved',
+        moveOnSelect: false,
+        nonSelectedFilter: ''
+      });
+    

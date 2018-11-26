@@ -10,8 +10,6 @@ module.exports.AddNewRepository = (req, res, next) => {
   if (errors) {
     res.render('')
   }
-
-  console.log(req.body);
 }
 
 module.exports.GetNewRepository = (req, res, next) => {

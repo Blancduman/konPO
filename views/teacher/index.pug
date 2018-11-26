@@ -1,0 +1,17 @@
+extends ./includes/layout
+
+block content
+  .row
+  .mx-auto.col-md-7.col-lg-6.col-sm-12
+    table.table.table-dark
+      thead
+        tr
+          th(scope="col")
+          th(scope="col") ФИО
+          th(scope="col") Группа
+      tbody
+        each student in students
+          tr
+            th(scrope="row")
+            td
+              a(href="/teacher/student/"+student._id).text-light #{student.lastname} #{student.firstname} #{student.middlename}

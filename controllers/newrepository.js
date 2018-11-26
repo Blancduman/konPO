@@ -3,8 +3,15 @@ const mongoose = require('mongoose'),
       User = mongoose.model('User');
 
 module.exports.AddNewRepository = (req, res, next) => {
+  req.checkBody('newrope', 'Укажите имя репозитория').notEmpty();
+  req.checkBody('teachers', 'Укажите преподавателей').notEmpty();
+  
+  let errors = req.validationErrors();
+  if (errors) {
+    res.render('')
+  }
+
   console.log(req.body);
-  console.log(req.user);
 }
 
 module.exports.GetNewRepository = (req, res, next) => {

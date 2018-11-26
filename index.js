@@ -3,7 +3,8 @@ const express = require('express'),
       mongoose = require('mongoose'),
       bodyParser = require('body-parser'),
       cookieParser = require('cookie-parser'),
-      config = require('./config');
+      config = require('./config'),
+      expressValidator = require('express-validator');
 
 const flash = require('connect-flash'),
       passport = require('passport'),
@@ -44,6 +45,22 @@ app.use(session({
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 app.use(flash());
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
 
 require('./config/passport');
 app.use(passport.initialize());

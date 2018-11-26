@@ -25,7 +25,7 @@ module.exports.UserRegistration = function(req, res, next) {
             req.logIn(user, (err) => {
               if (err) { return next(err); }
               req.flash('message', 'Студент создан');
-              return res.redirect('/repositories');
+              return res.redirect('/login');
             })
           })
           .catch(next);

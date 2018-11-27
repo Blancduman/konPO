@@ -31,6 +31,128 @@ const EditTask = (status, taskId) => {
     });
 }
 
+module.exports.StudentGetProfilePage = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (!user) {
+        req.clearCookie('usertoken', {path: '/'});
+        return res.render('index');
+      }
+      if (user.role === STUDENT) {
+        return res.render('student/profile', {user: user});
+      }
+    }).catch(next);
+}
+
+module.exports.StudentEditProfile = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (!user) {
+        req.clearCookie('usertoken', {path: '/'});
+        return res.render('index');
+      }
+      if (user.role === STUDENT) {
+        let email = req.body.email, firstname = req.body.firstname, 
+        lastname = req.body.lastname, middlename = req.body.middlename,
+        phone = req.body.phone, 
+        password = req.body.password, password2 = req.body.password2;
+
+        if (email){
+          req.checkBody('email', 'Укажите почту.').notEmpty()
+          req.checkBody('email', 'Укажите правильную почту.').isEmail();
+        }
+        if (firstname){
+          req.checkBody('firstname', 'Укажите имя.').notEmpty();
+        }
+        if (lastname)
+          req.checkBody('lastname', 'Укажите фамилию.').notEmpty();
+        if (middlename)
+          req.checkBody('middlename', 'Укажите отчество.').notEmpty();
+        if (password){
+          req.checkBody('password', 'Укажите пароль.').notEmpty()
+          req.checkBody('password', 'Пароли не совпадают.').equals(password2);
+        }
+        if (phone)
+          req.checkBody('phone', 'Укажите номер.').notEmpty();
+        let errors = req.validationErrors();
+        if (errors) {
+          res.render('student/profile', {errors:errors, user: user});
+        } else {
+          if (email) user.email = email;
+          if (firstname) user.firstname = firstname;
+          if (lastname) user.lastname = lastname;
+          if (middlename) user.middlename = middlename;
+          if (password) user.setPassword(password);
+          if (phone) user.phone = phone;
+
+          user.save();
+        }
+      }
+    }).catch(next);
+}
+
+module.exports.StudentGetProfilePage = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (!user) {
+        req.clearCookie('usertoken', {path: '/'});
+        return res.render('index');
+      }
+      if (user.role === STUDENT) {
+        return res.render('student/profile', {user: user});
+      }
+    }).catch(next);
+}
+
+module.exports.StudentGetClosedRepositories = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (!user) {
+        req.clearCookie('usertoken', {path: '/'});
+        return res.render('index');
+      }
+      if (user.role === STUDENT) {
+        Repository.find({user: user._id, status: false})
+          .populate('teacher')
+          .exec(repo => {
+            return res.render('student/closed_repositories', {repositories: repo})
+          })
+      }
+    }).catch(next);
+};
+
+module.exports.StudentDownloadAccessedRepository = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (!user) {
+        req.clearCookie('usertoken', {path: '/'});
+        return res.render('index');
+      }
+      if (user.role === STUDENT) {
+        Repository.findOne({access: user._id, status: false, _id: req.params.repositoryid})
+          .then(repos => {
+            return res.send(repos);
+          }).catch(next);
+      }
+    }).catch(next);
+}
+
+module.exports.StudentGetAccessedRepositories = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (!user) {
+        req.clearCookie('usertoken', {path: '/'});
+        return res.render('index');
+      }
+      if (user.role === STUDENT) {
+        Repository.find({access: user._id, status: false})
+          .then(repos => {
+            return res.render('student/access_repositories', {repositories: repos});
+          }).catch(next);
+      }
+    }).catch(next);
+}
+
 module.exports.StudentManagerSectionTask = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
@@ -44,7 +166,8 @@ module.exports.StudentManagerSectionTask = (req, res, next) => {
             if (section.repository === req.params.repositoryid) {
               let _tasks = req.body.tasks;
               _tasks.forEach(_task => {
-                EditTask(_task.status, _task._id);
+                //EditTask(_task.status, _task._id);
+                Task.findByIdAndUpdate(_task._id, {$set: {status: _task.status}});
               });
             }
           }).catch(next);
@@ -55,7 +178,47 @@ module.exports.StudentManagerSectionTask = (req, res, next) => {
 //
 //          переделать в костанту для getrepo
 //
-module.exports.StudentGetSectionList = (req, res, next) => {
+// const StudentGetSectionList = (req, res, next) => {
+//   User.findOne(req.user)
+//     .then(user => {
+//       if (!user) {
+//         req.clearCookie('usertoken', {path: '/'});
+//         return res.render('index');
+//       }
+//       if (user.role === STUDENT) {
+//         Repository.findById(req.params.repositoryid)
+//           .populate('section')
+//           .exec((err, repo) => {
+//             if (err)
+//               return console.log(err);
+//             return res.send(repo.section);
+//           }).catch(next);
+//       }
+//     }).catch(next);
+// }
+
+const StudentGetSectionList = repositoryid => {
+  Repository.findById(repositoryid)
+    .populate('section')
+    .exec(repo => {
+      return repo.section;
+    }).catch(next);
+};
+
+module.exports.StudentClosedRepository = (req, res, next) => {
+  User.find(req.user)
+    .then(user => {
+      if (user.role === STUDENT) {
+        Repository.find({user: user._id, status: false})
+          .then(repo => {
+            return res.render('student/closed_repositories', {repositories: repo});
+          })
+      }
+    })
+}
+
+
+module.exports.StudentGetRepository = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (!user) {
@@ -65,17 +228,22 @@ module.exports.StudentGetSectionList = (req, res, next) => {
       if (user.role === STUDENT) {
         Repository.findById(req.params.repositoryid)
           .populate('section')
-          .exec((err, repo) => {
-            if (err)
-              return console.log(err);
-            return res.send(repo.section);
+          .exec(repo => {
+            if (repo.user === user._id)
+              return res.render('student/repository', {sections: repo.section});
+            else return res.redirect('student');
           }).catch(next);
+          // .then(repo => {
+          //   if (repo.user === user._id) {
+
+
+          //     //return res.render('student/repository'. {sections: StudentGetSectionList})
+          //   } else {
+          //     return res.redirect('/');
+          //   }
+          // }).catch(next);
       }
     }).catch(next);
-}
-
-module.exports.StudentGetRepository = (req, res, next) => {
-  
 }
 
 module.export.StudentGetRepositories = (req, res, next) => {

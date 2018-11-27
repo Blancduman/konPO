@@ -9,52 +9,59 @@ const passport = require('passport'),
       ADMIN = require('../constants').ADMIN;
 
 module.exports.UserLogin = (req, res, next) => {
-  passport.authenticate('localUsers', (err, user) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      req.flash('message', ' укажите логин и пароль!');
-      return res.redirect('/');
-    }
-    req.logIn(user, function(err) {
+  req.checkBody(req.body.username).notEmpty();
+  req.checkBody(req.body.password).notEmpty();
+  var errors = req.validationErrors();
+  if (errors) {
+    res.render('login', {errors:errors});
+  } else {
+    passport.authenticate('localUsers', (err, user) => {
       if (err) {
         return next(err);
       }
-      if (req.body.remember) {
-        let data = {};
-        data.series = uuidv4();
-        data.token = uuidv4();
-        data.username = user.username;
-        let recordDb = new UserToken(data);
-        UserToken
-          .remove({username: user.username})
-          .then(user => {
-            recordDb
-              .save()
-              .then(user => {
-                setCookie(res, {series: user.series, token: user.token, username: user.username});
-                User.findOne({username: user.username})
-                  .then(user => {
-                    if (user.role === STUDENT)
-                      return res.redirect('/student/index');
-                    if (user.role === ADMIN)
-                      return res.redirect('/admin/index');
-                    if (user.role === TEACHER)
-                      return res.redirect('/teacher/index');
-                  }).catch(next);
-              }).catch(next);
-          }).catch(next);
-      } else {
-        if (user.role === STUDENT)
-          return res.redirect('/student/index');
-        if (user.role === ADMIN)
-          return res.redirect('/admin/index');
-        if (user.role === TEACHER)
-          return res.redirect('/teacher/index');
+      if (!user) {
+        req.flash('message', ' укажите логин и пароль!');
+        return res.redirect('/');
       }
-    });
-  })(req, res, next);
+      req.logIn(user, function(err) {
+        if (err) {
+          return next(err);
+        }
+        if (req.body.remember) {
+          let data = {};
+          data.series = uuidv4();
+          data.token = uuidv4();
+          data.username = user.username;
+          let recordDb = new UserToken(data);
+          UserToken
+            .remove({username: user.username})
+            .then(user => {
+              recordDb
+                .save()
+                .then(user => {
+                  setCookie(res, {series: user.series, token: user.token, username: user.username});
+                  User.findOne({username: user.username})
+                    .then(user => {
+                      if (user.role === STUDENT)
+                        return res.redirect('/student/index');
+                      if (user.role === ADMIN)
+                        return res.redirect('/admin/index');
+                      if (user.role === TEACHER)
+                        return res.redirect('/teacher/index');
+                    }).catch(next);
+                }).catch(next);
+            }).catch(next);
+        } else {
+          if (user.role === STUDENT)
+            return res.redirect('/student/index');
+          if (user.role === ADMIN)
+            return res.redirect('/admin/index');
+          if (user.role === TEACHER)
+            return res.redirect('/teacher/index');
+        }
+      });
+    })(req, res, next);
+  }
 };
 
 module.exports.UserGetProfile = (req, res, next) => {
@@ -67,35 +74,46 @@ module.exports.UserGetProfile = (req, res, next) => {
 };
 
 module.exports.UserRegistration = (req, res, next) => {
-  User.findOne({username: req.body.username})
-    .then(user => {
-      if (user) {
-        req.flash('message', 'Пользователь с таким логином уже существует.');
-        res.redirect('/registration');
-      } else {
-        const newUser = new User({
-          username: req.body.username,
-          email: req.body.email,
-          firstname: req.body.firstname,
-          lastname: req.body.lastname,
-          middlename: req.body.middlename,
-          phone: req.body.phone,
-          image: 'https://pp.userapi.com/c851528/v851528089/5242f/15BkorO2nJE.jpg',
-          role: STUDENT,
-        });
-        newUser.setPassword(req.body.password);
-        newUser
-          .save()
-          .then(user => {
-            req.logIn(user, (err) => {
-              if (err) { return next(err); }
-              req.flash('message', 'Студент создан');
-              return res.redirect('/login');
+  req.checkBody(req.body.username).notEmpty();
+  req.checkBody(req.body.email).notEmpty().isEmail();
+  req.checkBody(req.body.firstname).notEmpty();
+  req.checkBody(req.body.lastname).notEmpty();
+  req.checkBody(req.body.middlename).notEmpty();
+  req.checkBody(req.body.password).notEmpty().equals(req.body.password);
+  var errors = req.validationErrors();
+  if (errors) {
+    res.render('registration', {errors:errors});
+  } else {
+    User.findOne({username: req.body.username})
+      .then(user => {
+        if (user) {
+          req.flash('message', 'Пользователь с таким логином уже существует.');
+          res.redirect('/registration');
+        } else {
+          const newUser = new User({
+            username: req.body.username,
+            email: req.body.email,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            middlename: req.body.middlename,
+            phone: req.body.phone,
+            image: 'https://pp.userapi.com/c851528/v851528089/5242f/15BkorO2nJE.jpg',
+            role: STUDENT,
+          });
+          newUser.setPassword(req.body.password);
+          newUser
+            .save()
+            .then(user => {
+              req.logIn(user, (err) => {
+                if (err) { return next(err); }
+                req.flash('message', 'Студент создан');
+                return res.redirect('/login');
+              })
             })
-          })
-          .catch(next);
-      }
-    }).catch(next);
+            .catch(next);
+        }
+      }).catch(next);
+  }
 }
 
 module.exports.GetHomePage = (req, res) => {

@@ -1,26 +1,31 @@
-const router = require('express').Router()
-      LoginController = require('../controllers/login').UserLogin,
-      UserRegistration = require('../controllers/registration').UserRegistration,
-      GetUserProfile = require('../controllers/profile').GetUserProfile,
-      isAuth = require('../lib/isAuthenticated'),
-      GetNewRepository = require('../controllers/newrepository').GetNewRepository,
-      AddNewRepository = require('../controllers/newrepository').AddNewRepository;
+const router = require('express').Router(),
+      UserRegistration = require('../controllers/User').UserRegistration,
+      UserLogin = require('../controllers/User').UserLogin,
+      GetHomePage = require('../controllers/User').GetHomePage,
+      GetLoginPage = require('../controllers/User').GetLoginPage,
+      GetRegistrationPage = require('../controllers/User').GetRegistrationPage;
 
-router.get('/', function(req, res) {
-  res.render('index');
-})
+const StudentRouter = require('./student');
+      // LoginController = require('../controllers/login').UserLogin,
+      // UserRegistration = require('../controllers/registration').UserRegistration,
+      // GetUserProfile = require('../controllers/profile').GetUserProfile,
+      // isAuth = require('../lib/isAuthenticated'),
+      // GetNewRepository = require('../controllers/newrepository').GetNewRepository,
+      // AddNewRepository = require('../controllers/newrepository').AddNewRepository;
 
-router.get('/login', function(req, res) {
-  res.render('login');
-});
-router.post('/login', LoginController);
-
-router.get('/registration', function(req, res) {
-  res.render('registration');
-});
+// Main
+router.get('/', GetHomePage);
+router.get('/login', GetLoginPage);
+router.get('/registration', GetRegistrationPage);
+router.post('/login', UserLogin);
 router.post('/registration', UserRegistration);
-router.get('/profile', isAuth, GetUserProfile);
-router.get('/newrepository', isAuth, GetNewRepository);
-router.post('/newrepository', isAuth, AddNewRepository);
+
+router.use('/student', StudentRouter);
+
+//Student
+
+//Teacher
+
+//Admin
 
 module.exports = router;

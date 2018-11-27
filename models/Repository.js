@@ -23,7 +23,11 @@ const RepositorySchema = new mongoose.Schema({
   }],
   message: [{
     type: mongoose.Schema.Types.ObjectId, ref: 'Message'
-  }]
+  }],
+  status: {
+    type: Boolean,
+    default: false
+  }
 }, {timestamps: true});
 
 RepositorySchema.pre('validate', function(next) {

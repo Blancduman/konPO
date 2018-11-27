@@ -11,8 +11,7 @@ block content
         .form-group
           label(for="teachers").text-primary
           select(multiple, data-live-search="true", name="teachers").selectpicker.form-control
-            option(value="asdf") Teacher 1
-            option(value="asdf2") Teacher 2
-            option(value="asdf3") Teacher 3
+            each teacher in teachers
+              option(value=teacher._id) #{teacher.lastname} #{teacher.firstname} #{teacher.middlename}
         .form-group
           button(type="submit").form-control.btn.btn-primary Создать

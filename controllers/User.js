@@ -62,7 +62,7 @@ module.exports.UserGetProfile = (req, res, next) => {
     if (user.role === STUDENT)
       res.render('student/profile', {user: user});
     if (user.role === TEACHER)
-      res.render('student/profile', {user: user});
+      res.render('teacher/profile', {user: user});
   }).catch(next);
 };
 

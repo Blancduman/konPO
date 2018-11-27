@@ -5,7 +5,8 @@ const router = require('express').Router(),
       GetLoginPage = require('../controllers/User').GetLoginPage,
       GetRegistrationPage = require('../controllers/User').GetRegistrationPage;
 
-const StudentRouter = require('./student');
+const StudentRouter = require('./student'),
+      TeacherRouter = require('./teacher');
       // LoginController = require('../controllers/login').UserLogin,
       // UserRegistration = require('../controllers/registration').UserRegistration,
       // GetUserProfile = require('../controllers/profile').GetUserProfile,
@@ -21,6 +22,7 @@ router.post('/login', UserLogin);
 router.post('/registration', UserRegistration);
 
 router.use('/student', StudentRouter);
+router.use('/teacher', TeacherRouter);
 
 //Student
 

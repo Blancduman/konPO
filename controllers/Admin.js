@@ -86,14 +86,12 @@ module.exports.AdminGetActiveTeachers = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (!user) {
-        console.log(user);
         req.clearCookie('usertoken', {path: '/'});
         return res.redirect('/');
       }
       if (user.role === ADMIN) {
         User.find({role: TEACHER, status: true})
           .then(_teachers => {
-            console.log(user);
             return res.render('admin/index', {teachers: _teachers});
           })
       }
@@ -110,13 +108,29 @@ module.exports.AdminGetDeactiveTeachers = (req, res, next) => {
       if (user.role === ADMIN) {
         User.find({role: TEACHER, status: false})
           .then(_teachers => {
-            return res.render('admin/deactive_teachers', {teachers: _teachers});
+            return res.render('admin/deactive_teachers', {teachers: _teachers, user: user});
           })
       }
     }).catch(next);
 }
 
 module.exports.AdminGetPageNewTeacher = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (!user) {
+        console.log('no user');
+        req.clearCookie('usertoken', {path: '/'});
+        return res.redirect('/');
+      }
+      if (user.role === ADMIN) {
+        console.log('yes user');
+        return res.render('admin/new_teacher', {user: user});
+      }
+    }).catch(next);
+}
+
+module.exports.AdminAddNewTeacher = (req, res, next) => {
+  console.log('adding');
   req.checkBody('username', 'Укажите логин.').notEmpty();
   req.checkBody('email', 'Укажите почту.').notEmpty().isEmail();
   req.checkBody('firstname', 'Укажите имя.').notEmpty();
@@ -125,11 +139,13 @@ module.exports.AdminGetPageNewTeacher = (req, res, next) => {
   req.checkBody('password', 'Укажите пароль').notEmpty().equals(req.body.password2);
   var errors = req.validationErrors();
   if (errors) {
+    console.log('cnt_Admin 139', errors);
     res.render('admin/new_teacher', {errors:errors});
   } else {
     User.findOne({username: req.body.username})
       .then(user => {
         if (user) {
+          console.log('cnt_Admin 145');
           req.flash('message', 'Пользователь с таким логином уже существует.');
           res.redirect('admin/new_teacher');
         } else {
@@ -145,13 +161,9 @@ module.exports.AdminGetPageNewTeacher = (req, res, next) => {
           });
           newUser.setPassword(req.body.password);
           newUser
-            .save()
-            .then(user => {
-              req.logIn(user, (err) => {
-                if (err) { return next(err); }
-                req.flash('message', 'Студент создан');
-                return res.redirect('/admin');
-              })
+            .save(() => {
+              req.flash('message', 'Преподаватель создан');
+              return res.redirect('/admin');
             })
             .catch(next);
         }

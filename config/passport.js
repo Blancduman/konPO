@@ -4,7 +4,7 @@ const passport = require('passport'),
       User = mongoose.model('User');
 
 passport.serializeUser(function(user, done) {
-  console.log('serializeUser: ', user);
+  console.log('serializeUser: ', user.username);
   done(null, user.id);
 });
 

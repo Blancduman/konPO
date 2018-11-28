@@ -1,0 +1,23 @@
+extends ./includes/layout
+
+block content
+  .row
+    h1.text-center #{student.lastname} #{student.firstname} #{student.middlename}
+    form(action="/teacher/student/closed/"+repository._id, method="post")
+      .form-group
+        select(multiple, name="duallistbox[]")
+          each user in users
+            option(value=user._id) #{user.lastname} #{user.firstname} #{user.middlename}
+          each user in access
+            option(value=user._id, selected) #{user.lastname} #{user.firstname} #{user.middlename}
+  
+  script.
+    $(document).ready(function() {
+      var demo1 = $('select[name="duallistbox[]"]').bootstrapDualListbox({
+        nonSelectedListLabel: 'Non-selected',
+        selectedListLabel: 'Selected',
+        preserveSelectionOnMove: 'moved',
+        moveOnSelect: false
+      });
+    }
+  

@@ -8,15 +8,12 @@
       div(id="navbarSupportedContent").collapse.navbar-collapse
         ul.navbar-nav.ml-auto
           li.nav-item
-            a(href="/access", data-toggle="tooltip", data-placement="top", title="Здесь отображаются репозитории, преподаватели которых дали вам доступ.").nav-link ДОСТУПНЫЕ РЕПОЗИТОРИИ
+            a(href="/admin", data-toggle="tooltip", data-placement="top", title="Открыть список преподавателей.").nav-link ПРЕПОДАВАТЕЛИ
           li.nav-item
-            a(href="/repositories/closed", data-toggle="tooltip", data-placement="top", title="Здесь отображаются ваши закрытые репозитории.").nav-link ЗАКРЫТЫЕ
+            a(href="/admin/new_teacher", data-toggle="tooltip", data-placement="top", title="Добавить нового преподавателя преподавателя.").nav-link ДОБАВИТЬ ПРЕПОДАВАТЕЛЯ
           li.nav-item
-            a(href="/repositories", data-toggle="tooltip", data-placement="top", title="Здесь отображаются ваши текущие репозитории.").nav-link РЕПОЗИТОРИИ
+            a(href="/admin/deactive_teachers", data-toggle="tooltip", data-placement="top", title="Открывает список деактивированных преподавателей.").nav-link ОТКЛЮЧЁННЫЕ ПРЕПОДАВАТЕЛИ
           li.nav-item.dropdown
-            a(id="navbarDropdown", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false").nav-link.dropdown-toggle.btn.btn-sm.btn-secondary #{user.firstname}
+            a(id="navbarDropdown", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false").nav-link.dropdown-toggle.btn.btn-sm.btn-secondary #{user.username}
             div(aria-labelledby="navbarDropdown").dropdown-menu
-              a(href="/repository/new", data-toggle="tooltip", data-placement="left", title="Создать новый репозиторий для курсовой работы.").dropdown-item Новый репозиторий
-              a(href="/repository/new", data-toggle="tooltip", data-placement="left", title="Открывается страница с вашими данными.").dropdown-item Профиль
-              .dropdown-divider
-              a(href="/repository/new", data-toggle="tooltip", data-placement="left", title="Выйти из вашего аккаунта.").dropdown-item Выйти
+              a(href="/logout", data-toggle="tooltip", data-placement="left", title="Выйти из вашего аккаунта.").dropdown-item Выйти

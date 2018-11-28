@@ -18,10 +18,13 @@ require('./models/UserToken');
 require('./models/Repository');
 require('./models/Section');
 require('./models/Task');
+require('./models/Message');
 
 const index = require('./routes/index'),
       tokenReq = require('./routes/usertoken'),
-      student = require('./routes/student');
+      student = require('./routes/student'),
+      teacher = require('./routes/teacher'),
+      admin = require('./routes/admin');
 
 const app = express();
 
@@ -38,13 +41,17 @@ app.use(session({
   cookie: {
     path: '/',
     httpOnly: true,
-    maxAge: null
+    maxAge: 1000
   },
   saveUninitialized: false,
   resave: false,
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 app.use(flash());
+
+require('./config/passport');
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
       var namespace = param.split('.')
@@ -62,13 +69,11 @@ app.use(expressValidator({
   }
 }));
 
-require('./config/passport');
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.use('*', tokenReq);
 app.use('/', index);
 app.use('/student', student);
+app.use('/teacher', teacher);
+app.use('/admin', admin);
 
 app.listen(3000, () => console.log('Port 3000'));
 

@@ -7,4 +7,4 @@ block content
         each teacher in teachers
           a(href="/admin/teacher/"+teacher._id, role="tab").list-group-item.list-group-item-action.bg-dark
             h3.text-primary ФИО: #{teacher.lastname} #{teacher.firstname} #{teacher.middlename}
-            h6.text-light Создан: #{teacher.createdAt}
+            h6.text-light Отключён: #{teacher.updatedAt}

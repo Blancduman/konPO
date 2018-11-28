@@ -14,4 +14,4 @@ var MessageSchema = new mongoose.Schema({
   }
 }, {timestamps: true});
 
-mongoose.model('Message', TaskSchema);
+mongoose.model('Message', MessageSchema);

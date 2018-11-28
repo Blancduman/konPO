@@ -9,8 +9,8 @@ const passport = require('passport'),
       ADMIN = require('../constants').ADMIN;
 
 module.exports.UserLogin = (req, res, next) => {
-  req.checkBody(req.body.username).notEmpty();
-  req.checkBody(req.body.password).notEmpty();
+  req.checkBody('username', 'Введите логин.').notEmpty();
+  req.checkBody('password', 'Введите пароль.').notEmpty();
   var errors = req.validationErrors();
   if (errors) {
     res.render('login', {errors:errors});
@@ -43,21 +43,21 @@ module.exports.UserLogin = (req, res, next) => {
                   User.findOne({username: user.username})
                     .then(user => {
                       if (user.role === STUDENT)
-                        return res.redirect('/student/index');
+                        return res.redirect('/student');
                       if (user.role === ADMIN)
-                        return res.redirect('/admin/index');
+                        return res.redirect('/admin');
                       if (user.role === TEACHER)
-                        return res.redirect('/teacher/index');
+                        return res.redirect('/teacher');
                     }).catch(next);
                 }).catch(next);
             }).catch(next);
         } else {
           if (user.role === STUDENT)
-            return res.redirect('/student/index');
+            return res.redirect('/student');
           if (user.role === ADMIN)
-            return res.redirect('/admin/index');
+            return res.redirect('/admin');
           if (user.role === TEACHER)
-            return res.redirect('/teacher/index');
+            return res.redirect('/teacher');
         }
       });
     })(req, res, next);
@@ -74,12 +74,12 @@ module.exports.UserGetProfile = (req, res, next) => {
 };
 
 module.exports.UserRegistration = (req, res, next) => {
-  req.checkBody(req.body.username).notEmpty();
-  req.checkBody(req.body.email).notEmpty().isEmail();
-  req.checkBody(req.body.firstname).notEmpty();
-  req.checkBody(req.body.lastname).notEmpty();
-  req.checkBody(req.body.middlename).notEmpty();
-  req.checkBody(req.body.password).notEmpty().equals(req.body.password);
+  req.checkBody('username', 'Укажите логин.').notEmpty();
+  req.checkBody('email', 'Укажите почту.').notEmpty().isEmail();
+  req.checkBody('firstname', 'Укажите имя.').notEmpty();
+  req.checkBody('lastname', 'Укажите фамилию.').notEmpty();
+  req.checkBody('middlename', 'Укажите отчество.').notEmpty();
+  req.checkBody('password', 'Укажите пароль').notEmpty().equals(req.body.password2);
   var errors = req.validationErrors();
   if (errors) {
     res.render('registration', {errors:errors});
@@ -117,26 +117,67 @@ module.exports.UserRegistration = (req, res, next) => {
 }
 
 module.exports.GetHomePage = (req, res) => {
-  User.findOne(req.user).then(user => {
-    if (!user) {
-      req.clearCookie('usertoken', {path: '/'});
-      return res.render('index');
-    }
-    if (user.role === STUDENT)
-      return res.redirect('/student');
-    if (user.role === TEACHER)
-      return res.redirect('/teacher');
-    if (user.role === ADMIN)
-      return res.redirect('/admin');
-  }).catch(res.render('index'));
+  if (req.isAuthenticated()) {
+    User.findOne(req.user).then(user => {
+      if (!user) {
+        res.clearCookie('usertoken', {path: '/'});
+        return res.redirect('/registration');
+      }
+      if (user.role === STUDENT)
+        return res.redirect('/student');
+      if (user.role === TEACHER)
+        return res.redirect('/teacher');
+      if (user.role === ADMIN)
+        return res.redirect('/admin');
+    });
+  } else {
+    return res.render('index');
+  }
+};
+
+module.exports.Logout = (req, res) => {
+  req.logout();
+  res.clearCookie('key');
+  res.clearCookie('usertoken');
+  res.redirect('/login') 
 }
 
-module.exports.GetLoginPage = (req, res) => {
-  res.render('login');
+module.exports.GetLoginPage = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    User.findOne(req.user).then(user => {
+      if (!user) {
+        res.clearCookie('usertoken', {path: '/'});
+        return res.render('login');
+      }
+      if (user.role === STUDENT)
+        return res.redirect('/student');
+      if (user.role === TEACHER)
+        return res.redirect('/teacher');
+      if (user.role === ADMIN)
+        return res.redirect('/admin');
+    });
+  } else {
+    return res.render('login');
+  }
 }
 
 module.exports.GetRegistrationPage = (req, res) => {
-  res.render('registration');
+  if (req.isAuthenticated()) {
+    User.findOne(req.user).then(user => {
+      if (!user) {
+        res.clearCookie('usertoken', {path: '/'});
+        return res.render('registration');
+      }
+      if (user.role === STUDENT)
+        return res.redirect('/student');
+      if (user.role === TEACHER)
+        return res.redirect('/teacher');
+      if (user.role === ADMIN)
+        return res.redirect('/admin');
+    }).catch(res.render('registration'));
+  } else {
+    res.render('registration');
+  }
 }
 
 const UserCookie = async (req, res, username) => {

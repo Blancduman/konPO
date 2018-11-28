@@ -3,17 +3,8 @@ const router = require('express').Router(),
       UserLogin = require('../controllers/User').UserLogin,
       GetHomePage = require('../controllers/User').GetHomePage,
       GetLoginPage = require('../controllers/User').GetLoginPage,
-      GetRegistrationPage = require('../controllers/User').GetRegistrationPage;
-
-const StudentRouter = require('./student'),
-      TeacherRouter = require('./teacher'),
-      AdminRouter = require('./admin');
-      // LoginController = require('../controllers/login').UserLogin,
-      // UserRegistration = require('../controllers/registration').UserRegistration,
-      // GetUserProfile = require('../controllers/profile').GetUserProfile,
-      // isAuth = require('../lib/isAuthenticated'),
-      // GetNewRepository = require('../controllers/newrepository').GetNewRepository,
-      // AddNewRepository = require('../controllers/newrepository').AddNewRepository;
+      GetRegistrationPage = require('../controllers/User').GetRegistrationPage,
+      Logout = require('../controllers/User').Logout;
 
 // Main
 router.get('/', GetHomePage);
@@ -21,10 +12,7 @@ router.get('/login', GetLoginPage);
 router.get('/registration', GetRegistrationPage);
 router.post('/login', UserLogin);
 router.post('/registration', UserRegistration);
-
-router.use('/student', StudentRouter);
-router.use('/teacher', TeacherRouter);
-router.use('/bigboi', AdminRouter);
+router.get('/logout', Logout);
 
 //Student
 

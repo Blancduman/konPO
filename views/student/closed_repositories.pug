@@ -1,12 +1,13 @@
-extends ./includes/closedrepository
+extends ./includes/layout
 
 block content
   .row
     .mx-auto.col-md-7.col-lg-6.col-sm-12
       div(role="tablist").list-group
-        each repository in repositories
-          div(role="tab").list-group-item.bg-dark
-            h3.text-primary #{repository.name}
-            h6.text-light Закрто преподавателем
-              b.text-success #{repository.teacher}
-            p.text-light #{repository.updateAt}
+        if repositories
+          each repository in repositories
+            div(role="tab").list-group-item.bg-dark
+              h3.text-primary #{repository.name}
+              h6.text-light Закрто преподавателем
+                b.text-success #{repository.teacher}
+              p.text-light #{repository.updateAt}

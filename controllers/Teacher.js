@@ -119,9 +119,9 @@ module.exports.TeacherGetStudentClosedRepository = (req, res, next) => {
         .populate('user')
         .exec(repo => {
           if (repo.user._id === req.params.studentid) {
-            User.find({access: repo._id}).
+            User.find({access: repo._id})
               .then(access => {
-                User.find({access: {$ne: {repo._id}}})
+                User.find({access: {$ne: repo._id}})
                   then(_user => {
                     return res.render('teacher/closed_repository', {repository: repo, access: access, users: _user})
                   }).catch(next);

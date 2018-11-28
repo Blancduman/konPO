@@ -30,7 +30,11 @@ const UserSchema = new mongoose.Schema({
   }],
   role: String,
   hash: String,
-  salt: String
+  salt: String,
+  status: {
+    type: Boolean,
+    default: true
+  }
 }, {timestamps: true});
 
 UserSchema.methods.validPassword = function(password) {

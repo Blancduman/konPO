@@ -114,8 +114,8 @@ module.exports.StudentGetClosedRepositories = (req, res, next) => {
       if (user.role === STUDENT) {
         Repository.find({user: user._id, status: false})
           .populate('teacher')
-          .exec(repo => {
-            return res.render('student/closed_repositories', {repositories: repo})
+          .exec(repos => {
+            return res.render('student/closed_repositories', {repositories: repos, user: user})
           })
       }
     }).catch(next);
@@ -147,7 +147,7 @@ module.exports.StudentGetAccessedRepositories = (req, res, next) => {
       if (user.role === STUDENT) {
         Repository.find({access: user._id, status: false})
           .then(repos => {
-            return res.render('student/access_repositories', {repositories: repos});
+            return res.render('student/access_repositories', {repositories: repos, user: user});
           }).catch(next);
       }
     }).catch(next);
@@ -246,7 +246,7 @@ module.exports.StudentGetRepository = (req, res, next) => {
     }).catch(next);
 }
 
-module.export.StudentGetRepositories = (req, res, next) => {
+module.exports.StudentGetRepositories = (req, res, next) => {
   User.findOne(req.user).then(user => {
     if (!user) {
       req.clearCookie('usertoken', {path: '/'});
@@ -255,13 +255,13 @@ module.export.StudentGetRepositories = (req, res, next) => {
     if (user.role === STUDENT) {
       Repository.find({user: user})
         .then(repositories => {
-          return res.render('student/index', {repositories: repositories});
+          return res.render('student/index', {repositories: repositories, user: user});
         }).catch(next);
     }
   }).catch(next);
 }
 
-module.export.StudentNewRepositoryGetPage = (req, res, next) => {
+module.exports.StudentNewRepositoryGetPage = (req, res, next) => {
   User.findOne(req.user).then(user => {
     if (!user) {
       req.clearCookie('usertoken', {path: '/'});
@@ -269,7 +269,7 @@ module.export.StudentNewRepositoryGetPage = (req, res, next) => {
     }
     if (user.role === STUDENT) {
       User.find({role: TEACHER}).then(teachers => {
-        return res.render('student/new_repository', {teachers: teachers});
+        return res.render('student/new_repository', {teachers: teachers, user: user});
       }).catch(next);
     }
     else res.redirect('/');

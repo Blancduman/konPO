@@ -33,15 +33,14 @@ app.set('view engine', 'pug');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
+app.use(cookieParser(config.secret));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: config.secret,
   key: 'keys',
   cookie: {
     path: '/',
-    httpOnly: true,
-    maxAge: 1000
+    httpOnly: true
   },
   saveUninitialized: false,
   resave: false,

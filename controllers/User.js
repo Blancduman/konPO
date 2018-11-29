@@ -40,7 +40,7 @@ module.exports.UserLogin = (req, res, next) => {
                 .save()
                 .then(user => {
                   setCookie(res, {series: user.series, token: user.token, username: user.username});
-                  console.log(req.session.user);
+                  console.log('usercontrol 43',req.session.user);
                   User.findOne({username: user.username})
                     .then(user => {
                       if (user.role === STUDENT)

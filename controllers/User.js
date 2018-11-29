@@ -40,22 +40,14 @@ module.exports.UserLogin = (req, res, next) => {
                 .save()
                 .then(user => {
                   setCookie(res, {series: user.series, token: user.token, username: user.username});
+                  console.log(req.session.user);
                   User.findOne({username: user.username})
                     .then(user => {
                       if (user.role === STUDENT)
-                        // req.session.save(() => {
-                        //   return res.redirect('/student');
-                        // })
                          return res.redirect('/student');
                       if (user.role === ADMIN)
-                        // req.session.save(() => {
-                        //   return res.redirect('/admin');
-                        // })
                         return res.redirect('/admin');
                       if (user.role === TEACHER)
-                        // req.session.save(() => {
-                        //   return res.redirect('/teacher');
-                        // })
                          return res.redirect('/teacher');
                     }).catch(next);
                 }).catch(next);

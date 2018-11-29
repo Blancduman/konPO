@@ -16,4 +16,5 @@
           li.nav-item.dropdown
             a(id="navbarDropdown", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false").nav-link.dropdown-toggle.btn.btn-sm.btn-secondary #{user.username}
             div(aria-labelledby="navbarDropdown").dropdown-menu
-              a(href="/logout", data-toggle="tooltip", data-placement="left", title="Выйти из вашего аккаунта.").dropdown-item Выйти
+              form(action="/logout", method="get")
+                button(data-toggle="tooltip", data-placement="left", title="Выйти из вашего аккаунта.").dropdown-item Выйти

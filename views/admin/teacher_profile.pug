@@ -13,7 +13,7 @@ block content
       form(action="/profile", method="put").form
         .form-check
           input(type="checkbox", name="status", checked=user.status).form-check-input
-          label(for="status").form-check-label Деактивировать
+          label(for="status").form-check-label.text-primary Активен
         .form-group
           .col-xs-6
             label(for="firstname")

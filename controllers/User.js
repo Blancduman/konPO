@@ -43,11 +43,20 @@ module.exports.UserLogin = (req, res, next) => {
                   User.findOne({username: user.username})
                     .then(user => {
                       if (user.role === STUDENT)
-                        return res.redirect('/student');
+                        // req.session.save(() => {
+                        //   return res.redirect('/student');
+                        // })
+                         return res.redirect('/student');
                       if (user.role === ADMIN)
+                        // req.session.save(() => {
+                        //   return res.redirect('/admin');
+                        // })
                         return res.redirect('/admin');
                       if (user.role === TEACHER)
-                        return res.redirect('/teacher');
+                        // req.session.save(() => {
+                        //   return res.redirect('/teacher');
+                        // })
+                         return res.redirect('/teacher');
                     }).catch(next);
                 }).catch(next);
             }).catch(next);
@@ -204,11 +213,13 @@ module.exports.CookieChecker = async (req, res, next) => {
       if (user.isValidToken(objTokens.token)) {
         await UserCookie(req, res, username);
       } else {
+        console.log('UserContrl 216');
         req.flash('message', 'Трампампам! Похоже вы утратили контроль над своим аккаунтом. Смените срочно пароль!');
         res.clearCookie('usertoken', {path: '/'});
         return res.redirect('/');
       }
     } else {
+      console.log('UserContrl 222');
       res.clearCookie('usertoken', {path: '/'});
       return res.redirect('/');
     }

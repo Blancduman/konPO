@@ -9,7 +9,6 @@ const router = require('express').Router(),
         AdminGetPageNewTeacher
       } = require('../controllers/Admin');
 
-
 router.get('/', isAuth, AdminGetActiveTeachers);
 router.get('/deactive_teachers', isAuth, AdminGetDeactiveTeachers);
 router.get('/new_teacher', isAuth, AdminGetPageNewTeacher);

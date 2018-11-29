@@ -1,19 +1,21 @@
 const uuidv4 = require('uuid/v4'),
-      mongoose = require('mongoose'),
-      User = mongoose.model('User'),
-      Repository = mongoose.model('Repository'),
-      Section = mongoose.model('Section'),
-      Task = mongoose.model('Task'),
-      Message = mongoose.model('Message'),
-      STUDENT = require('../constants').STUDENT,
-      TEACHER = require('../constants').TEACHER,
-      _Sections = require('../constants').SECTIONS;
+  mongoose = require('mongoose'),
+  User = mongoose.model('User'),
+  Repository = mongoose.model('Repository'),
+  Section = mongoose.model('Section'),
+  Task = mongoose.model('Task'),
+  Message = mongoose.model('Message'),
+  STUDENT = require('../constants').STUDENT,
+  TEACHER = require('../constants').TEACHER,
+  _Sections = require('../constants').SECTIONS;
 
 module.exports.AdminGetTeacherProfile = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (!user) {
-        req.clearCookie('usertoken', {path: '/'});
+        req.clearCookie('usertoken', {
+          path: '/'
+        });
         return res.render('index');
       }
       if (user.role === ADMIN) {
@@ -22,7 +24,9 @@ module.exports.AdminGetTeacherProfile = (req, res, next) => {
             if (!_teacher) {
               return res.redirect('/admin');
             }
-            return res.render('admin/teacher_profile', {user: _teachers});
+            return res.render('admin/teacher_profile', {
+              user: _teachers
+            });
           })
       }
     }).catch(next);
@@ -32,7 +36,9 @@ module.exports.AdminEditTeacherProfile = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (!user) {
-        req.clearCookie('usertoken', {path: '/'});
+        req.clearCookie('usertoken', {
+          path: '/'
+        });
         return res.render('index');
       }
       if (user.role === ADMIN) {
@@ -41,22 +47,26 @@ module.exports.AdminEditTeacherProfile = (req, res, next) => {
             if (!_teacher) {
               return res.redirect('/admin');
             }
-            let email = req.body.email, firstname = req.body.firstname, 
-                lastname = req.body.lastname, middlename = req.body.middlename,
-                phone = req.body.phone, status = req.body.status, 
-                password = req.body.password, password2 = req.body.password2;
-            if (email){
+            let email = req.body.email,
+              firstname = req.body.firstname,
+              lastname = req.body.lastname,
+              middlename = req.body.middlename,
+              phone = req.body.phone,
+              status = req.body.status,
+              password = req.body.password,
+              password2 = req.body.password2;
+            if (email) {
               req.checkBody('email', 'Укажите почту.').notEmpty()
               req.checkBody('email', 'Укажите правильную почту.').isEmail();
             }
-            if (firstname){
+            if (firstname) {
               req.checkBody('firstname', 'Укажите имя.').notEmpty();
             }
             if (lastname)
               req.checkBody('lastname', 'Укажите фамилию.').notEmpty();
             if (middlename)
               req.checkBody('middlename', 'Укажите отчество.').notEmpty();
-            if (password){
+            if (password) {
               req.checkBody('password', 'Укажите пароль.').notEmpty()
               req.checkBody('password', 'Пароли не совпадают.').equals(password2);
             }
@@ -66,7 +76,10 @@ module.exports.AdminEditTeacherProfile = (req, res, next) => {
               _teacher.status = status;
             let errors = req.validationErrors();
             if (errors) {
-              res.render('admin/teacher_profile', {errors:errors, user: _teacher});
+              res.render('admin/teacher_profile', {
+                errors: errors,
+                user: _teacher
+              });
             } else {
               if (email) _teacher.email = email;
               if (firstname) _teacher.firstname = firstname;
@@ -74,7 +87,7 @@ module.exports.AdminEditTeacherProfile = (req, res, next) => {
               if (middlename) _teacher.middlename = middlename;
               if (password) _teacher.setPassword(password);
               if (phone) _teacher.phone = phone;
-    
+
               _teacher.save();
             }
           }).catch(next);
@@ -86,13 +99,20 @@ module.exports.AdminGetActiveTeachers = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (!user) {
-        req.clearCookie('usertoken', {path: '/'});
+        req.clearCookie('usertoken', {
+          path: '/'
+        });
         return res.redirect('/');
       }
       if (user.role === ADMIN) {
-        User.find({role: TEACHER, status: true})
+        User.find({
+            role: TEACHER,
+            status: true
+          })
           .then(_teachers => {
-            return res.render('admin/index', {teachers: _teachers});
+            return res.render('admin/index', {
+              teachers: _teachers
+            });
           })
       }
     }).catch(next);
@@ -102,13 +122,21 @@ module.exports.AdminGetDeactiveTeachers = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (!user) {
-        req.clearCookie('usertoken', {path: '/'});
+        req.clearCookie('usertoken', {
+          path: '/'
+        });
         return res.render('index');
       }
       if (user.role === ADMIN) {
-        User.find({role: TEACHER, status: false})
+        User.find({
+            role: TEACHER,
+            status: false
+          })
           .then(_teachers => {
-            return res.render('admin/deactive_teachers', {teachers: _teachers, user: user});
+            return res.render('admin/deactive_teachers', {
+              teachers: _teachers,
+              user: user
+            });
           })
       }
     }).catch(next);
@@ -119,12 +147,16 @@ module.exports.AdminGetPageNewTeacher = (req, res, next) => {
     .then(user => {
       if (!user) {
         console.log('no user');
-        req.clearCookie('usertoken', {path: '/'});
+        req.clearCookie('usertoken', {
+          path: '/'
+        });
         return res.redirect('/');
       }
       if (user.role === ADMIN) {
         console.log('yes user');
-        return res.render('admin/new_teacher', {user: user});
+        return res.render('admin/new_teacher', {
+          user: user
+        });
       }
     }).catch(next);
 }
@@ -140,9 +172,13 @@ module.exports.AdminAddNewTeacher = (req, res, next) => {
   var errors = req.validationErrors();
   if (errors) {
     console.log('cnt_Admin 139', errors);
-    res.render('admin/new_teacher', {errors:errors});
+    res.render('admin/new_teacher', {
+      errors: errors
+    });
   } else {
-    User.findOne({username: req.body.username})
+    User.findOne({
+        username: req.body.username
+      })
       .then(user => {
         if (user) {
           console.log('cnt_Admin 145');
@@ -164,8 +200,7 @@ module.exports.AdminAddNewTeacher = (req, res, next) => {
             .save(() => {
               req.flash('message', 'Преподаватель создан');
               return res.redirect('/admin');
-            })
-            .catch(next);
+            });
         }
       }).catch(next);
   }

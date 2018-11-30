@@ -1,8 +1,9 @@
 const router = require('express').Router(),
       isAuth = require('../lib/isAuthenticated'),
       { TeacherGetCurrentRepositories, 
+        TeacherGetActiveRepositories,
         TeacherGetStudentActiveRepositories,
-        TeacherGetClosedRepositoriesStudents,
+        TeacherGetClosedRepositories,
         TeacherGetStudentActiveRepository,
         TeacherGetStudentClosedRepositories,
         TeacherGetStudentClosedRepository,
@@ -10,12 +11,12 @@ const router = require('express').Router(),
       } = require('../controllers/Teacher');
 
 router.get('/', isAuth, TeacherGetCurrentRepositories);
-router.get('/student/active/:studentid', isAuth, TeacherGetStudentActiveRepositories);
-router.get('/student/active/:studentid/:repositoryid', isAuth, TeacherGetStudentActiveRepository);
-router.get('/student/closed', isAuth, TeacherGetClosedRepositoriesStudents);
-router.get('/student/closed/:studentid', isAuth, TeacherGetStudentClosedRepositories);
-router.get('/student/closed/:studentid/:repositoryid', isAuth, TeacherGetStudentClosedRepository);
-router.get('/student/closed/download/:studentid/:repositoryid', isAuth, TeacherDownloadStudentClosedRepository);
+router.get('/active/:studentid', isAuth, TeacherGetActiveRepositories);
+router.get('/active/:studentid/:repositoryid', isAuth, TeacherGetStudentActiveRepository);
+router.get('/closed', isAuth, TeacherGetClosedRepositories);
+router.get('/closed/:studentid', isAuth, TeacherGetStudentClosedRepositories);
+router.get('/closed/:studentid/:repositoryid', isAuth, TeacherGetStudentClosedRepository);
+router.get('/closed/download/:studentid/:repositoryid', isAuth, TeacherDownloadStudentClosedRepository);
 
 //file system here but later
 

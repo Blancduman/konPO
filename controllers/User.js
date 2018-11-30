@@ -64,15 +64,6 @@ module.exports.UserLogin = (req, res, next) => {
   }
 };
 
-module.exports.UserGetProfile = (req, res, next) => {
-  User.findOne(req.user).then(user => {
-    if (user.role === STUDENT)
-      res.render('student/profile', {user: user});
-    if (user.role === TEACHER)
-      res.render('teacher/profile', {user: user});
-  }).catch(next);
-};
-
 module.exports.UserRegistration = (req, res, next) => {
   req.checkBody('username', 'Укажите логин.').notEmpty();
   req.checkBody('email', 'Укажите почту.').notEmpty().isEmail();
@@ -145,10 +136,6 @@ module.exports.Logout = (req, res) => {
 module.exports.GetLoginPage = (req, res, next) => {
   if (req.isAuthenticated()) {
     User.findOne(req.user).then(user => {
-      if (!user) {
-        res.clearCookie('usertoken', {path: '/'});
-        return res.render('login');
-      }
       if (user.role === STUDENT)
         return res.redirect('/student');
       if (user.role === TEACHER)
@@ -164,10 +151,6 @@ module.exports.GetLoginPage = (req, res, next) => {
 module.exports.GetRegistrationPage = (req, res) => {
   if (req.isAuthenticated()) {
     User.findOne(req.user).then(user => {
-      if (!user) {
-        res.clearCookie('usertoken', {path: '/'});
-        return res.render('registration');
-      }
       if (user.role === STUDENT)
         return res.redirect('/student');
       if (user.role === TEACHER)
@@ -208,12 +191,15 @@ module.exports.CookieChecker = async (req, res, next) => {
         console.log('UserContrl 209');
         req.flash('message', 'Трампампам! Похоже вы утратили контроль над своим аккаунтом. Смените срочно пароль!');
         res.clearCookie('usertoken', {path: '/'});
+        res.clearCookie('keys', {path: '/'});
         req.logout();
         return res.redirect('/');
       }
     } else {
       console.log('UserContrl 215');
       res.clearCookie('usertoken', {path: '/'});
+      res.clearCookie('keys', {path: '/'});
+      req.logout();
       return res.redirect('/');
     }
   }

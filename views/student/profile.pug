@@ -10,7 +10,7 @@ block content
         input(type="file", name="newprofilepicture", id="validatedCustomFile").custom-fire-input
         label(for="validatedCustomFile").custom-file-label Загрузить...
     .mx-auto.col-md-8.col-lg-8.col-sm-12
-      form(action="/profile", method="put").form
+      form(action="/student/profile").form.student.edit-profile
         .form-group
           .col-xs-6
             label(for="firstname")

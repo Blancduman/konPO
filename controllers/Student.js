@@ -18,20 +18,6 @@ const GenerateSection = (name, repoId) => {
   return section;
 }
 
-// const GenerateTask = (body, sectionId) => {
-//   let task = new Task();
-//   task.body = body;
-//   task.section = sectionId;
-//   return task;
-// }
-
-const EditTask = (status, taskId) => {
-  Task.findById(taskId)
-    .then(task => {
-      task.status = status;
-    });
-}
-
 module.exports.StudentGetProfilePage = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
@@ -69,7 +55,8 @@ module.exports.StudentEditProfile = (req, res, next) => {
           req.checkBody('phone', 'Укажите номер.').notEmpty();
         let errors = req.validationErrors();
         if (errors) {
-          res.render('student/profile', {errors:errors, user: user});
+          console.log(errors);
+          return res.render('student/profile', {errors:errors, user: user});
         } else {
           if (email) user.email = email;
           if (firstname) user.firstname = firstname;
@@ -80,15 +67,6 @@ module.exports.StudentEditProfile = (req, res, next) => {
 
           user.save();
         }
-      }
-    }).catch(next);
-}
-
-module.exports.StudentGetProfilePage = (req, res, next) => {
-  User.findOne(req.user)
-    .then(user => {
-      if (user.role === STUDENT) {
-        return res.render('student/profile', {user: user});
       }
     }).catch(next);
 }
@@ -156,15 +134,13 @@ module.exports.StudentGetRepository = (req, res, next) => {
           .populate('section')
           .exec(repo => {
             if (repo.user === user._id)
-              return res.render('student/repository', {sections: repo.section});
-            else return res.redirect('student');
+              return res.render('student/repository', {sections: repo.section, user: user});
           }).catch(next);
       }
     }).catch(next);
 }
 
 module.exports.StudentGetRepositories = (req, res, next) => {
-  console.log('167 Student.js controll', req.user.id, req.user._id);
   User.findOne(req.user)
     .then(user => {
       if (user.role === STUDENT) {
@@ -172,10 +148,9 @@ module.exports.StudentGetRepositories = (req, res, next) => {
           .then(repositories => {
             return res.render('student/index', {repositories: repositories, user: user});
           }).catch(next);
-      } else {
-        res.redirect('/');
-      }
-  }).catch(next);
+      } 
+    }
+  ).catch(next);
 }
 
 module.exports.StudentNewRepositoryGetPage = (req, res, next) => {
@@ -185,7 +160,6 @@ module.exports.StudentNewRepositoryGetPage = (req, res, next) => {
         return res.render('student/new_repository', {teachers: teachers, user: user});
       }).catch(next);
     }
-    else res.redirect('/');
   }).catch(next);
 }
 

@@ -9,8 +9,9 @@ block content
           th(scope="col")
           th(scope="col") ФИО
       tbody
-        each student in students
-          tr
-            th(scrope="row")
-            td
-              a(href="/teacher/student/active/"+student._id).text-light #{student.lastname} #{student.firstname} #{student.middlename}
+        if students
+          each student in students
+            tr
+              th(scrope="row")
+              td
+                a(href="/teacher/student/active/"+student.user._id).text-light #{student.user.lastname} #{student.user.firstname} #{student.user.middlename}

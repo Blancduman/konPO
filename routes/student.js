@@ -27,7 +27,7 @@ router.get('/accessed_repositories/:repositoryid', isAuth, StudentDownloadAccess
 router.get('/closed_repositories', isAuth, StudentGetClosedRepositories);
 
 router.get('/profile', isAuth, StudentGetProfilePage);
-router.post('/profile/edit', isAuth, StudentEditProfile);
+router.put('/profile', isAuth, StudentEditProfile);
 
 
 //file system here but later

@@ -20,12 +20,32 @@ module.exports.TeacherGetCurrentRepositories = (req, res, next) => {
           .populate('user')
           .exec(repos => {
             return res.render('teacher/index', {
-              students: Array.from(new Set(repos.user))
+              students: repos,
+              user: user
             });
           });
       }
     }).catch(next);
 };
+
+module.exports.TeacherGetActiveRepositories = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === TEACHER) {
+        Repository.find({
+            teacher: user,
+            status: true
+          })
+          .populate('user')
+          .exec(repos => {
+            return res.render('teacher/active_repositories', {
+              repositories: repos,
+              user: user
+            });
+          });
+      }
+    }).catch(next);
+}
 
 module.exports.TeacherGetStudentActiveRepositories = (req, res, next) => {
   User.findOne(req.user)
@@ -39,7 +59,7 @@ module.exports.TeacherGetStudentActiveRepositories = (req, res, next) => {
           .populate('user')
           .exec(repos => {
             return res.render('teacher/active_repositories', {
-              student: repos.user,
+              student: repos[0].user,
               repositories: repos
             });
           });
@@ -65,7 +85,7 @@ module.exports.TeacherGetStudentActiveRepository = (req, res, next) => {
     }).catch(next);
 }
 
-module.exports.TeacherGetClosedRepositoriesStudents = (req, res, next) => {
+module.exports.TeacherGetClosedRepositories = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (user.role === TEACHER) {
@@ -77,7 +97,7 @@ module.exports.TeacherGetClosedRepositoriesStudents = (req, res, next) => {
           .populate('user')
           .exec(repos => {
             return res.render('teacher/closed_repositories', {
-              student: repos.user,
+              user: user,
               repositories: repos
             });
           });

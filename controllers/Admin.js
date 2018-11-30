@@ -12,12 +12,6 @@ const uuidv4 = require('uuid/v4'),
 module.exports.AdminGetTeacherProfile = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
-      if (!user) {
-        req.clearCookie('usertoken', {
-          path: '/'
-        });
-        return res.render('index');
-      }
       if (user.role === ADMIN) {
         User.findById(req.params.teacherid)
           .then(_teacher => {
@@ -36,12 +30,6 @@ module.exports.AdminGetTeacherProfile = (req, res, next) => {
 module.exports.AdminEditTeacherProfile = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
-      if (!user) {
-        req.clearCookie('usertoken', {
-          path: '/'
-        });
-        return res.render('index');
-      }
       if (user.role === ADMIN) {
         User.findById(req.params.teacherid)
           .then(_teacher => {
@@ -97,15 +85,8 @@ module.exports.AdminEditTeacherProfile = (req, res, next) => {
 }
 
 module.exports.AdminGetActiveTeachers = (req, res, next) => {
-  req.session.user = req.user;
   User.findOne(req.user)
     .then(user => {
-      if (!user) {
-        req.clearCookie('usertoken', {
-          path: '/'
-        });
-        return res.redirect('/');
-      }
       if (user.role === ADMIN) {
         User.find({
             role: TEACHER,
@@ -124,12 +105,6 @@ module.exports.AdminGetActiveTeachers = (req, res, next) => {
 module.exports.AdminGetDeactiveTeachers = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
-      if (!user) {
-        req.clearCookie('usertoken', {
-          path: '/'
-        });
-        return res.render('index');
-      }
       if (user.role === ADMIN) {
         User.find({
             role: TEACHER,
@@ -148,13 +123,6 @@ module.exports.AdminGetDeactiveTeachers = (req, res, next) => {
 module.exports.AdminGetPageNewTeacher = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
-      if (!user) {
-        console.log('no user');
-        req.clearCookie('usertoken', {
-          path: '/'
-        });
-        return res.redirect('/');
-      }
       if (user.role === ADMIN) {
         console.log('yes user');
         return res.render('admin/new_teacher', {
@@ -181,13 +149,6 @@ module.exports.AdminAddNewTeacher = (req, res, next) => {
   } else {
     User.findOne(req.user)
       .then(user => {
-        if (!user) {
-          console.log('no user');
-          req.clearCookie('usertoken', {
-            path: '/'
-          });
-          return res.redirect('/');
-        }
         if (user.role === ADMIN) {
           User.findOne({
               username: req.body.username

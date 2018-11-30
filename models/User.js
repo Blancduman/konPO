@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
   middlename: String,
   phone: String,
   image: String,
-  repositories: [{
+  repository: [{
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Repository'
   }],

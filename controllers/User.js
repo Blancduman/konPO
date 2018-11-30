@@ -40,7 +40,6 @@ module.exports.UserLogin = (req, res, next) => {
                 .save()
                 .then(user => {
                   setCookie(res, {series: user.series, token: user.token, username: user.username});
-                  console.log('usercontrol 43',req.session.user);
                   User.findOne({username: user.username})
                     .then(user => {
                       if (user.role === STUDENT)
@@ -122,7 +121,7 @@ module.exports.GetHomePage = (req, res) => {
     User.findOne(req.user).then(user => {
       if (!user) {
         res.clearCookie('usertoken', {path: '/'});
-        return res.redirect('/registration');
+        return res.redirect('/');
       }
       if (user.role === STUDENT)
         return res.redirect('/student');
@@ -203,15 +202,17 @@ module.exports.CookieChecker = async (req, res, next) => {
 
     if (!!user && user.isValidCookie(objTokens.series)) {
       if (user.isValidToken(objTokens.token)) {
+        console.log('UserContrl 206');
         await UserCookie(req, res, username);
       } else {
-        console.log('UserContrl 216');
+        console.log('UserContrl 209');
         req.flash('message', 'Трампампам! Похоже вы утратили контроль над своим аккаунтом. Смените срочно пароль!');
         res.clearCookie('usertoken', {path: '/'});
+        req.logout();
         return res.redirect('/');
       }
     } else {
-      console.log('UserContrl 222');
+      console.log('UserContrl 215');
       res.clearCookie('usertoken', {path: '/'});
       return res.redirect('/');
     }

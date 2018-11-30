@@ -1,4 +1,5 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    slug = require('slug');
 
 var SectionSchema = new mongoose.Schema({
   slug: {

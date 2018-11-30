@@ -19,4 +19,5 @@
               a(href="/student/new_repository", data-toggle="tooltip", data-placement="left", title="Создать новый репозиторий для курсовой работы.").dropdown-item Новый репозиторий
               a(href="/student/profile", data-toggle="tooltip", data-placement="left", title="Открывается страница с вашими данными.").dropdown-item Профиль
               .dropdown-divider
-              a(href="/logout", data-toggle="tooltip", data-placement="left", title="Выйти из вашего аккаунта.").dropdown-item Выйти
+              form(action="/logout", method="get")
+                button(data-toggle="tooltip", data-placement="left", title="Выйти из вашего аккаунта.").dropdown-item Выйти

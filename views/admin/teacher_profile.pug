@@ -10,30 +10,44 @@ block content
         input(type="file", name="newprofilepicture", id="validatedCustomFile").custom-fire-input
         label(for="validatedCustomFile").custom-file-label Загрузить...
     .mx-auto.col-md-8.col-lg-8.col-sm-12
-      form(action="/profile", method="put").form
-        .form-check
-          input(type="checkbox", name="status", checked=user.status).form-check-input
-          label(for="status").form-check-label.text-primary Активен
+      form(action="/admin/teacher/"+teacher._id).form.admin.edit-teacher
+        .form-group
+          .col-xs-6
+            h4.text-primary Статус
+              if teacher.status
+                .form-check
+                  input(type="radio", name="status", value="true", checked).form-check-input
+                  label(for="status").form-check-label.text-white Активен
+                .form-check
+                  input(type="radio", name="status", value="false").form-check-input
+                  label(for="status").form-check-label.text-white Отключён
+              else
+                .form-check
+                  input(type="radio", name="status", value="true").form-check-input
+                  label(for="status").form-check-label.text-white Активен
+                .form-check
+                  input(type="radio", name="status", value="false", checked).form-check-input
+                  label(for="status").form-check-label.text-white Отключён
         .form-group
           .col-xs-6
             label(for="firstname")
               h4.text-primary Имя
-            input(type="text", name="firstname", placeholder=user.firstname, title="Введите имя.").form-control
+            input(type="text", name="firstname", placeholder=teacher.firstname, title="Введите имя.").form-control
         .form-group
           .col-xs-6
             label(for="lastname")
               h4.text-primary Фамилия
-            input(type="text", name="lastname", placeholder=user.lastname, title="Введите фамилию.").form-control
+            input(type="text", name="lastname", placeholder=teacher.lastname, title="Введите фамилию.").form-control
         .form-group
           .col-xs-6
             label(for="middlename")
               h4.text-primary Отчество
-            input(type="text", name="middlename", placeholder=user.middlename, title="Введите отчество").form-control
+            input(type="text", name="middlename", placeholder=teacher.middlename, title="Введите отчество").form-control
         .form-group
           .col-xs-6
             label(for="phone")
               h4.text-primary Телефон
-            input(type="text", name="phone", placeholder=user.phone, title="Введите номер телефона").form-control
+            input(type="text", name="phone", placeholder=teacher.phone, title="Введите номер телефона").form-control
         .form-group
           .col-xs-12
             br

@@ -25,7 +25,8 @@ module.exports.AdminGetTeacherProfile = (req, res, next) => {
               return res.redirect('/admin');
             }
             return res.render('admin/teacher_profile', {
-              user: _teacher
+              user: user,
+              teacher: _teacher
             });
           })
       }
@@ -112,6 +113,7 @@ module.exports.AdminGetActiveTeachers = (req, res, next) => {
           })
           .then(_teachers => {
             return res.render('admin/index', {
+              user: user,
               teachers: _teachers
             });
           })
@@ -188,104 +190,33 @@ module.exports.AdminAddNewTeacher = (req, res, next) => {
         }
         if (user.role === ADMIN) {
           User.findOne({
-            username: req.body.username
-          })
-          .then(user => {
-            if (user) {
-              console.log('cnt_Admin 145');
-              req.flash('message', 'Пользователь с таким логином уже существует.');
-              res.redirect('admin/new_teacher');
-            } else {
-              const newUser = new User({
-                username: req.body.username,
-                email: req.body.email,
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                middlename: req.body.middlename,
-                phone: req.body.phone,
-                image: 'https://pp.userapi.com/c851528/v851528089/5242f/15BkorO2nJE.jpg',
-                role: TEACHER,
-              });
-              newUser.setPassword(req.body.password);
-              newUser
-                .save(() => {
-                  req.flash('message', 'Преподаватель создан');
-                  return res.redirect('/admin');
+              username: req.body.username
+            })
+            .then(user => {
+              if (user) {
+                console.log('cnt_Admin 145');
+                req.flash('message', 'Пользователь с таким логином уже существует.');
+                res.redirect('admin/new_teacher');
+              } else {
+                const newUser = new User({
+                  username: req.body.username,
+                  email: req.body.email,
+                  firstname: req.body.firstname,
+                  lastname: req.body.lastname,
+                  middlename: req.body.middlename,
+                  phone: req.body.phone,
+                  image: 'https://pp.userapi.com/c851528/v851528089/5242f/15BkorO2nJE.jpg',
+                  role: TEACHER,
                 });
-            }
-          }).catch(next);
-      }
-        });
-      }
+                newUser.setPassword(req.body.password);
+                newUser
+                  .save(() => {
+                    req.flash('message', 'Преподаватель создан');
+                    return res.redirect('/admin');
+                  });
+              }
+            }).catch(next);
+        }
+      });
+  }
 }
-
-// module.exports.AdminAddNewTeacher = (req, res, next) => {
-//   console.log('223');
-//   req.checkBody('username', 'Укажите логин.').notEmpty();
-//   req.checkBody('email', 'Укажите почту.').notEmpty().isEmail();
-//   req.checkBody('firstname', 'Укажите имя.').notEmpty();
-//   req.checkBody('lastname', 'Укажите фамилию.').notEmpty();
-//   req.checkBody('middlename', 'Укажите отчество.').notEmpty();
-//   req.checkBody('password', 'Укажите пароль').notEmpty().equals(req.body.password2);
-//   var errors = req.validationErrors();
-//   if (errors) {
-//     console.log('cnt_Admin 139', errors);
-//     res.render('admin/new_teacher', {
-//       errors: errors
-//     });
-//   } else {
-//     if (!!req.cookies.usertoken) {
-//       console.log('228');
-//       let objTokens = JSON.parse(req.cookies.usertoken),
-//         username = objTokens.username;
-//       User.findOne({
-//           username: username
-//         })
-//         .then(user => {
-//           console.log('245');
-//           if (!user) {
-//             console.log('no user');
-//             req.clearCookie('usertoken', {
-//               path: '/'
-//             });
-//             return res.redirect('/');
-//           }
-//           if (user.role === ADMIN) {
-//             User.findOne({
-//                 username: req.body.username
-//               })
-//               .then(user => {
-//                 console.log('258');
-//                 if (user) {
-//                   console.log('cnt_Admin 145');
-//                   req.flash('message', 'Пользователь с таким логином уже существует.');
-//                   res.redirect('admin/new_teacher');
-//                 } else {
-//                   console.log('264');
-//                   const newUser = new User({
-//                     username: req.body.username,
-//                     email: req.body.email,
-//                     firstname: req.body.firstname,
-//                     lastname: req.body.lastname,
-//                     middlename: req.body.middlename,
-//                     phone: req.body.phone,
-//                     image: 'https://pp.userapi.com/c851528/v851528089/5242f/15BkorO2nJE.jpg',
-//                     role: TEACHER,
-//                   });
-//                   newUser.setPassword(req.body.password);
-//                   newUser
-//                     .save(() => {
-//                       console.log('278');
-//                       req.flash('message', 'Преподаватель создан');
-//                       return res.redirect('/admin');
-//                     });
-//                 }
-//               }).catch(next);
-//           }
-//         }).catch(next);
-//     } else {
-//       return res.redirect('/');
-//     }
-
-//   }
-// }

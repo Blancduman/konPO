@@ -19,7 +19,7 @@ const GenerateSection = (name, repoId) => {
 }
 
 module.exports.StudentGetProfilePage = (req, res, next) => {
-  User.findOne(req.user)
+  User.findById(req.user.id)
     .then(user => {
       if (user.role === STUDENT) {
         return res.render('student/profile', {user: user});
@@ -28,7 +28,7 @@ module.exports.StudentGetProfilePage = (req, res, next) => {
 }
 
 module.exports.StudentEditProfile = (req, res, next) => {
-  User.findOne(req.user)
+  User.findById(req.user.id)
     .then(user => {
       if (user.role === STUDENT) {
         let email = req.body.email, firstname = req.body.firstname, 
@@ -72,7 +72,7 @@ module.exports.StudentEditProfile = (req, res, next) => {
 }
 
 module.exports.StudentGetClosedRepositories = (req, res, next) => {
-  User.findOne(req.user)
+  User.findById(req.user.id)
     .then(user => {
       if (user.role === STUDENT) {
         Repository.find({user: user._id, status: false})
@@ -85,7 +85,7 @@ module.exports.StudentGetClosedRepositories = (req, res, next) => {
 };
 
 module.exports.StudentDownloadAccessedRepository = (req, res, next) => {
-  User.findOne(req.user)
+  User.findById(req.user.id)
     .then(user => {
       if (user.role === STUDENT) {
         Repository.findOne({access: user._id, status: false, _id: req.params.repositoryid})
@@ -97,7 +97,7 @@ module.exports.StudentDownloadAccessedRepository = (req, res, next) => {
 }
 
 module.exports.StudentGetAccessedRepositories = (req, res, next) => {
-  User.findOne(req.user)
+  User.findById(req.user.id)
     .then(user => {
       if (user.role === STUDENT) {
         Repository.find({access: user._id, status: false})
@@ -109,7 +109,7 @@ module.exports.StudentGetAccessedRepositories = (req, res, next) => {
 }
 
 module.exports.StudentManagerSectionTask = (req, res, next) => {
-  User.findOne(req.user)
+  User.findById(req.user.id)
     .then(user => {
       if (user.role === STUDENT) {
         Section.findById(req.params.sectionid)
@@ -127,7 +127,7 @@ module.exports.StudentManagerSectionTask = (req, res, next) => {
 }
 
 module.exports.StudentGetRepository = (req, res, next) => {
-  User.findOne(req.user)
+  User.findById(req.user.id)
     .then(user => {
       if (user.role === STUDENT) {
         Repository.findById(req.params.repositoryid)
@@ -141,7 +141,7 @@ module.exports.StudentGetRepository = (req, res, next) => {
 }
 
 module.exports.StudentGetRepositories = (req, res, next) => {
-  User.findOne(req.user)
+  User.findById(req.user.id)
     .then(user => {
       if (user.role === STUDENT) {
         Repository.find({user: user})
@@ -154,17 +154,18 @@ module.exports.StudentGetRepositories = (req, res, next) => {
 }
 
 module.exports.StudentNewRepositoryGetPage = (req, res, next) => {
-  User.findOne(req.user).then(user => {
-    if (user.role === STUDENT) {
-      User.find({role: TEACHER}).then(teachers => {
-        return res.render('student/new_repository', {teachers: teachers, user: user});
-      }).catch(next);
-    }
-  }).catch(next);
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === STUDENT) {
+        User.find({role: TEACHER}).then(teachers => {
+          return res.render('student/new_repository', {teachers: teachers, user: user});
+        }).catch(next);
+      }
+   }).catch(next);
 }
 
 module.exports.StudentNewRepositoryCreate = (req, res, next) => {
-  User.findOne(req.user)
+  User.findById(req.user.id)
     .then(user => {
       if (user.role === STUDENT) {
         req.checkBody('title', 'Укажите имя репозитории').notEmpty();
@@ -196,7 +197,7 @@ module.exports.StudentNewRepositoryCreate = (req, res, next) => {
 }
 
 module.exports.StudentGetSectionTask = (req, res, next) => {
-  User.findOne(req.user)
+  User.findById(req.user.id)
     .then(user => {
       if (user.role === STUDENT) {
         Repository.findById(req.params.repositoryid)

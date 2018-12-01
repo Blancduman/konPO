@@ -177,6 +177,35 @@ const UserCookie = async (req, res, username) => {
   });
 }
 
+// module.exports.CookieChecker = async (req, res, next) => {
+//   if (!!req.cookies.usertoken) {
+//     let objTokens = JSON.parse(req.cookies.usertoken),
+//         username = objTokens.username;
+//         user = await UserToken.findOne({username});
+
+//     if (!!user && user.isValidCookie(objTokens.series)) {
+//       if (user.isValidToken(objTokens.token)) {
+//         console.log('UserContrl 206');
+//         await UserCookie(req, res, username);
+//       } else {
+//         console.log('UserContrl 209');
+//         req.flash('message', 'Трампампам! Похоже вы утратили контроль над своим аккаунтом. Смените срочно пароль!');
+//         res.clearCookie('usertoken', {path: '/'});
+//         res.clearCookie('keys', {path: '/'});
+//         req.logout();
+//         return res.redirect('/');
+//       }
+//     } else {
+//       console.log('UserContrl 215');
+//       res.clearCookie('usertoken', {path: '/'});
+//       res.clearCookie('keys', {path: '/'});
+//       req.logout();
+//       return res.redirect('/');
+//     }
+//   }
+//   next();
+// }
+
 module.exports.CookieChecker = async (req, res, next) => {
   if (!!req.cookies.usertoken) {
     let objTokens = JSON.parse(req.cookies.usertoken),
@@ -184,11 +213,7 @@ module.exports.CookieChecker = async (req, res, next) => {
         user = await UserToken.findOne({username});
 
     if (!!user && user.isValidCookie(objTokens.series)) {
-      if (user.isValidToken(objTokens.token)) {
-        console.log('UserContrl 206');
-        await UserCookie(req, res, username);
-      } else {
-        console.log('UserContrl 209');
+      if (!user.isValidToken(objTokens.token)) {
         req.flash('message', 'Трампампам! Похоже вы утратили контроль над своим аккаунтом. Смените срочно пароль!');
         res.clearCookie('usertoken', {path: '/'});
         res.clearCookie('keys', {path: '/'});

@@ -11,6 +11,9 @@ block content
               p.text-success #{section.updatedAt}
 
       .col-md-5.col-lg-5.col-sm-12
+        .form-group
+          form(action="/teacher/closed/"+repository.user._id+"/"+repository._id, method="post")
+            button(type="submit").form-control.btn.btn-primary Закрыть
         nav(aria-label="breadcrumb", data-toggle="tooltip", data-placement="top", title="Путь раздела.")
           ol(style="background-color:rgb(151, 153, 155); border-color:#e38c8c !important;").breadcrumb.bg-dark.border
             if path

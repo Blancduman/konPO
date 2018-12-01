@@ -95,20 +95,42 @@ module.exports.TeacherGetStudentActiveRepository = (req, res, next) => {
     }).catch(next);
 }
 
+module.exports.TeacherCloseStudentRepository = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === TEACHER) {
+        Repository.findById(req.params.repositoryid)
+          .then(repo => {
+            if (repo.user._id.toString() === req.params.studentid.toString()) {
+              console.log(repo);
+              repo.status = false;
+              //archive repo
+              repo.save();
+              res.redirect('/teacher');
+            }
+          })
+      }
+    }).catch(next);
+}
+
 module.exports.TeacherGetClosedRepositories = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (user.role === TEACHER) {
         Repository.find({
-            teacher: user,
-            status: false,
-            user: req.params.studentid
+            teacher: user.id,
+            status: false
           })
-          .populate('user')
-          .exec(repos => {
-            return res.render('teacher/closed_repositories', {
-              user: user,
-              repositories: repos
+          .populate({
+            path: 'user',
+            select: '_id firstname lastname middlename'
+          })
+          .exec()
+          .then(repos => {
+            console.log(repos);
+            return res.render('teacher/index', {
+              students: repos,
+              user: user
             });
           });
       }
@@ -141,7 +163,10 @@ module.exports.TeacherGetStudentClosedRepository = (req, res, next) => {
       if (!user) {
         if (user.role === TEACHER) {
           Repository.findById(req.params.repositoryid)
-            .populate('user')
+            .populate({
+              path: 'user',
+              select: '_id firstname lastname middlename'
+            })
             .exec(repo => {
               if (repo.user._id === req.params.studentid) {
                 User.find({

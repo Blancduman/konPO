@@ -3,7 +3,7 @@ extends ./includes/layout
 block content
   .row
     h1.text-center #{student.lastname} #{student.firstname} #{student.middlename}
-    form(action="/teacher/student/closed/"+repository._id, method="post")
+    form(action="/teacher/closed/"+repository.user+"/"+repository._id)
       .form-group
         select(multiple, name="duallistbox[]")
           each user in users

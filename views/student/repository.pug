@@ -1,24 +1,21 @@
-extends ./include/layout
-
-- var currentFolder = "";
-- var path = [];
-- var session = [];
+extends ./includes/layout
 
 block content
   .container-fluid
     .row
       .col-md-3.col-lg-3.col-sm-12
         div(role="tablist").list-group
-          each section in sections
-            a(href="/repository/section"+section._id, role="tab").list-group-item.list-group-item-action.bg-dark.pb-0
+          each section in repository.section
+            a(href="/repository/section/"+section._id, role="tab").list-group-item.list-group-item-action.bg-dark.pb-0
               h6.text-primary #{section.name}
-              p.text-success #{section.updateAt}
+              p.text-success #{section.updatedAt}
 
       .col-md-5.col-lg-5.col-sm-12
         nav(aria-label="breadcrumb", data-toggle="tooltip", data-placement="top", title="Путь раздела.")
           ol(style="background-color:rgb(151, 153, 155); border-color:#e38c8c !important;").breadcrumb.bg-dark.border
-            each folder in path
-              li.breadcrumb-item #{folder}
+            if path
+              each folder in path
+                li.breadcrumb-item #{folder}
             li.breadcrumb-item.active #{currentFolder}
         table.table.table-dark
           tbody
@@ -26,33 +23,37 @@ block content
               th(scope="row")
                 td
                   a(href="#").text-light.pl-3 ..
-            each dir in dirs
-              tr
-                th(scope="row")
-                  td
-                    img(src="../images/folder.png", alt="Папочка", style="width: 5%;")
-                    a(href="#").text-light #{dir.name}
-            each file in files
-              tr
-                th(scope="row")
-                  td
-                    img(src="../images/file.png", alt="Файлик", style="width: 5%;")
-                    a(href="#").text-light #{file.name}
+            if dirs
+              each dir in dirs
+                tr
+                  th(scope="row")
+                    td
+                      img(src="../images/folder.png", alt="Папочка", style="width: 5%;")
+                      a(href="#").text-light #{dir.name}
+            if files
+              each file in files
+                tr
+                  th(scope="row")
+                    td
+                      img(src="../images/file.png", alt="Файлик", style="width: 5%;")
+                      a(href="#").text-light #{file.name}
       div(style="border-color:#e38c8c !important; border-radius: 10px;").col-md-4.col-lg-4.col-sm-12.border
-        h2.text-primary.text-center.mb-0 Задания
-        h6.text-primary.text-center #{session.name}
+        h2.text-primary.text-center.mb-0 #{repository.title}
+        h6.text-primary.text-center.section-title empty
         .panel.panel-default
           form
             ul.list-group.text-light
-              each task in session.tasks
-                li.list-group-item.bg-dark
-                  task.body
-                  .material-switch.pull-right
-                    if task.status
-                      input(type="checkbox", name=task.name, checked)
-                      label(for=task.name).label-success
-                    else 
-                      input(type="checkbox", name=task.name)
-                      label(for=task.name).label-success
+              if session
+                if session.tasks
+                  each task in session.tasks
+                    li.list-group-item.bg-dark
+                      task.body
+                      .material-switch.pull-right
+                        if task.status
+                          input(type="checkbox", name=task.name, checked)
+                          label(for=task.name).label-success
+                        else 
+                          input(type="checkbox", name=task.name)
+                          label(for=task.name).label-success
             .form-control.bg-dark.border-0
               button(type="submit").btn.btn-primary Готово

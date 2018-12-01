@@ -9,8 +9,7 @@ const RepositorySchema = new mongoose.Schema({
   title: String,
   description: String,
   user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    type: mongoose.Schema.Types.ObjectId, ref: 'User'
   },
   access: [{
     type: mongoose.Schema.Types.ObjectId, ref: 'User'

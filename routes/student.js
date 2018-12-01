@@ -1,16 +1,17 @@
 const router = require('express').Router(),
-      StudentGetRepositories = require('../controllers/Student').StudentGetRepositories,
-      StudentNewRepositoryGetPage = require('../controllers/Student').StudentNewRepositoryGetPage,
-      StudentNewRepositoryCreate = require('../controllers/Student').StudentNewRepositoryCreate,
-      StudentGetSectionTask = require('../controllers/Student').StudentGetSectionTask,
-      StudentManagerSectionTask = require('../controllers/Student').StudentManagerSectionTask,
-      StudentGetRepository = require('../controllers/Student').StudentGetRepository,
-      StudentGetAccessedRepositories = require('../controllers/Student').StudentGetAccessedRepositories,
-      StudentDownloadAccessedRepository = require('../controllers/Student').StudentDownloadAccessedRepository,
-      StudentGetClosedRepositories = require('../controllers/Student').StudentGetClosedRepositories,
-      StudentGetProfilePage = require('../controllers/Student').StudentGetProfilePage,
-      StudentEditProfile = require('../controllers/Student').StudentEditProfile,
-      isAuth = require('../lib/isAuthenticated');
+      isAuth = require('../lib/isAuthenticated'),
+    { StudentGetRepositories,
+      StudentNewRepositoryGetPage,
+      StudentNewRepositoryCreate,
+      StudentGetSectionTask,
+      StudentManagerSectionTask,
+      StudentGetRepository,
+      StudentGetAccessedRepositories,
+      StudentDownloadAccessedRepository,
+      StudentGetClosedRepositories,
+      StudentGetProfilePage,
+      StudentEditProfile,
+      StudentDownloadClosedRepository } = require('../controllers/Student');
 
 router.get('/', isAuth, StudentGetRepositories);
 
@@ -25,6 +26,7 @@ router.get('/accessed_repositories', isAuth, StudentGetAccessedRepositories);
 router.get('/accessed_repositories/:repositoryid', isAuth, StudentDownloadAccessedRepository);
 
 router.get('/closed_repositories', isAuth, StudentGetClosedRepositories);
+router.get('/closed_repository/:repositoryid', isAuth, StudentDownloadClosedRepository);
 
 router.get('/profile', isAuth, StudentGetProfilePage);
 router.put('/profile', isAuth, StudentEditProfile);

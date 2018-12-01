@@ -9,16 +9,21 @@ const uuidv4 = require('uuid/v4'),
   TEACHER = require('../constants').TEACHER,
   _Sections = require('../constants').SECTIONS;
 
-module.exports.TeacherGetCurrentRepositories = (req, res, next) => {
+module.exports.TeacherGetCurrentStudents = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (user.role === TEACHER) {
         Repository.find({
-            teacher: user,
+            teacher: user.id,
             status: true
           })
-          .populate('user')
-          .exec(repos => {
+          .populate({
+            path: 'user',
+            select: '_id firstname lastname middlename'
+          })
+          .exec()
+          .then(repos => {
+            console.log(repos);
             return res.render('teacher/index', {
               students: repos,
               user: user

@@ -11,7 +11,7 @@ const router = require('express').Router(),
       } = require('../controllers/Teacher');
 
 router.get('/', isAuth, TeacherGetCurrentStudents);
-router.get('/active/:studentid', isAuth, TeacherGetActiveRepositories);
+router.get('/active/:studentid', isAuth, TeacherGetStudentActiveRepositories);
 router.get('/active/:studentid/:repositoryid', isAuth, TeacherGetStudentActiveRepository);
 router.get('/closed', isAuth, TeacherGetClosedRepositories);
 router.get('/closed/:studentid', isAuth, TeacherGetStudentClosedRepositories);

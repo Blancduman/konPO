@@ -2,14 +2,14 @@ extends ./includes/layout
 
 block content
   .row
-    if student
-      h2.text-white #{student.user.lastname} #{student.user.firstname} #{student.user.middlename}
     .mx-auto.col-md-7.col-lg-6.col-sm-12
+      if student
+        h2.text-white.text-center #{student.lastname} #{student.firstname} #{student.middlename}
       div(role="tablist").list-group
         if repositories
           each repository in repositories
             a(href='/teacher/active/' + student._id +'/' +repository._id, role="tab").list-group-item.list-group-item-action.bg-dark
-              h3.text-primary #{repository.name}
+              h3.text-primary #{repository.title}
               p.text-warning #{repository.updateAt}
         else 
           h2.text-primary Пока нет репозиториев

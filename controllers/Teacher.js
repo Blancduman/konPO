@@ -60,14 +60,16 @@ module.exports.TeacherGetStudentActiveRepositories = (req, res, next) => {
             teacher: user,
             status: true,
             user: req.params.studentid
-          })
-          .populate('user')
-          .exec(repos => {
-            return res.render('teacher/active_repositories', {
-              student: repos[0].user,
-              repositories: repos
-            });
-          });
+          }).then(repos => {
+            User.findById(req.params.studentid)
+              .then(_user => {
+                return res.render('teacher/active_repositories', {
+                  student: _user,
+                  repositories: repos,
+                  user: user
+                });
+              }).catch(next);
+          }).catch(next);
       }
     }).catch(next);
 };
@@ -77,10 +79,13 @@ module.exports.TeacherGetStudentActiveRepository = (req, res, next) => {
     .then(user => {
       if (user.role === TEACHER) {
         Repository.findById(req.params.repositoryid)
+          .populate('section')
+          .exec()
           .then(repo => {
-            if (repo.user === req.params.studentid) {
+            if (repo.user._id.toString() === req.params.studentid.toString()) {
               return res.render('teacher/repository', {
-                repository: repo
+                repository: repo,
+                user: user
               });
             } else {
               return res.redirect('/teacher');

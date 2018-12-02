@@ -11,7 +11,8 @@ const router = require('express').Router(),
       StudentGetClosedRepositories,
       StudentGetProfilePage,
       StudentEditProfile,
-      StudentDownloadClosedRepository } = require('../controllers/Student');
+      StudentDownloadClosedRepository,
+      StudentPostImageToProfile } = require('../controllers/Student');
 
 router.get('/', isAuth, StudentGetRepositories);
 
@@ -30,6 +31,7 @@ router.get('/closed_repository/:repositoryid', isAuth, StudentDownloadClosedRepo
 
 router.get('/profile', isAuth, StudentGetProfilePage);
 router.put('/profile', isAuth, StudentEditProfile);
+router.put('/profile', isAuth, StudentPostImageToProfile);
 
 
 //file system here but later

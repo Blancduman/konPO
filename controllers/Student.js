@@ -8,7 +8,8 @@ const uuidv4 = require('uuid/v4'),
       STUDENT = require('../constants').STUDENT,
       TEACHER = require('../constants').TEACHER,
       _Sections = require('../constants').SECTIONS,
-      path = require('path');
+      path = require('path'),
+      uploader = require('formidable');
 
 const GenerateSection = (name, repoId) => {
   let section = new Section();
@@ -17,6 +18,13 @@ const GenerateSection = (name, repoId) => {
   section.slugify();
   section.save();
   return section;
+}
+
+module.exports.StudentPostImageToProfile = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      
+    })
 }
 
 module.exports.StudentGetProfilePage = (req, res, next) => {
@@ -77,8 +85,12 @@ module.exports.StudentGetClosedRepositories = (req, res, next) => {
     .then(user => {
       if (user.role === STUDENT) {
         Repository.find({user: user._id, status: false})
-          .populate('teacher')
-          .exec(repos => {
+          .populate({
+            path: 'teacher',
+            select: 'firstname lastname middlename'
+          })
+          .exec()
+          .then(repos => {
             return res.render('student/closed_repositories', {repositories: repos, user: user})
           })
       }
@@ -165,7 +177,7 @@ module.exports.StudentGetRepositories = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (user.role === STUDENT) {
-        Repository.find({user: user})
+        Repository.find({user: user, status: true})
           .populate('teacher')
           .exec((err, repos) => {
             if (err) {console.log(err); return;}

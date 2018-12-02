@@ -9,6 +9,7 @@ block content
             div(role="tab").list-group-item.bg-dark
               h3.text-primary #{repository.name}
               h6.text-light Закрыто преподавателем
-                b.text-success #{repository.teacher.lastname} #{repository.teacher.firstname} #{repository.teacher.middlename}
-              p.text-light #{repository.updateAt}
+              each teacher in repository.teacher
+                b.text-success #{teacher.lastname} #{teacher.firstname} #{teacher.middlename};
+              p.text-light #{repository.updatedAt}
               a(href="/student/closed_repository/"+repository._id, title="скачать")

@@ -16,7 +16,7 @@ module.exports.TeacherGetCurrentStudents = (req, res, next) => {
         Repository.find({
             teacher: user.id,
             status: true
-          })
+          }).select('user')
           .populate({
             path: 'user',
             select: '_id firstname lastname middlename'
@@ -24,13 +24,16 @@ module.exports.TeacherGetCurrentStudents = (req, res, next) => {
           .exec()
           .then(repos => {
             return res.render('teacher/index', {
-              students: repos,
+              students: repos.filter((set => f => !set.has(f.user) && set.add(f.user))(new Set)),
               user: user
             });
           });
       }
     }).catch(next);
 };
+Array.prototype.diff3 = function(a) {
+
+}
 
 module.exports.TeacherGetActiveRepositories = (req, res, next) => {
   User.findOne(req.user)
@@ -177,23 +180,17 @@ module.exports.TeacherGetStudentClosedRepositories = (req, res, next) => {
   //     }
   //   }).catch(next);
 }
-
-Array.prototype.diff = function (a) {
-  return this.filter(function (i) {
-    return a.indexOf(i) < 0
-  });
-}
 const diff2 = function(a, b) {
   let c = [],
   k = true;
-  a.forEach(x => {
-    b.forEach(y => {
-      if (x._id.toString() === y._id.toString()){
-        k = false;
-      }
-    });
-    if (k) c.push(x);
-  });
+  for (var i =0; i<a.length; i++) {
+    for (var j=0; j<b.length; j++) {
+      if (a[i].id === b[j].id){
+        k = false; break;}
+    }
+    if (k) c.push(a[i]);
+    k=true;
+  }
   return c;
 }
 module.exports.TeacherGiveAccessStudents = (req, res, next) => {
@@ -216,6 +213,7 @@ module.exports.TeacherGiveAccessStudents = (req, res, next) => {
       }
     })
 }
+
 module.exports.TeacherGetStudentClosedRepository = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {

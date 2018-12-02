@@ -133,10 +133,11 @@ $(document).ready(function() {
         });
         window.location.replace(ap+"student");
     });
-    var demo1 = $('select[name="duallistbox[]"]').bootstrapDualListbox({
-        nonSelectedListLabel: 'Non-selected',
-        selectedListLabel: 'Selected',
+    $('select[name="duallistbox[]"]').bootstrapDualListbox({
+        nonSelectedListLabel: 'Студенты',
+        selectedListLabel: 'Доступ разрешен',
         preserveSelectionOnMove: 'moved',
-        moveOnSelect: false
+        moveOnSelect: false,
+        infoText: ''
     });
 })

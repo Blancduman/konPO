@@ -8,7 +8,8 @@ const router = require('express').Router(),
         TeacherGetStudentActiveRepository,
         TeacherGetStudentClosedRepositories,
         TeacherGetStudentClosedRepository,
-        TeacherDownloadStudentClosedRepository
+        TeacherDownloadStudentClosedRepository,
+        TeacherGiveAccessStudents
       } = require('../controllers/Teacher');
 
 router.get('/', isAuth, TeacherGetCurrentStudents);
@@ -18,6 +19,7 @@ router.post('/active/:studentid/:repositoryid', isAuth, TeacherCloseStudentRepos
 router.get('/closed', isAuth, TeacherGetClosedStudentsRepositories);
 router.get('/closed/:studentid', isAuth, TeacherGetStudentClosedRepositories);
 router.get('/closed/:studentid/:repositoryid', isAuth, TeacherGetStudentClosedRepository);
+router.post('/closed/:studentid/:repositoryid', isAuth, TeacherGiveAccessStudents);
 router.get('/closed/download/:studentid/:repositoryid', isAuth, TeacherDownloadStudentClosedRepository);
 
 //file system here but later

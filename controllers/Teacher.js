@@ -184,7 +184,9 @@ module.exports.TeacherGetStudentClosedRepositories = (req, res, next) => {
 Array.prototype.diff = function(a) {
   return this.filter(function(i) {return a.indexOf(i) < 0});
 }
-
+module.exports.TeacherGiveAccessStudents = (req,res, next) => {
+  
+}
 module.exports.TeacherGetStudentClosedRepository = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {

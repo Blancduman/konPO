@@ -3,15 +3,13 @@ extends ./includes/layout
 block content
   .row
     .mx-auto.col-md-7.col-lg-6.col-sm-12
-          table.table.table-dark
-        thead
-          tr
-            th(scope="col")
-            th(scope="col") ФИО
-        tbody
-          if students
-            each student in students
-              tr
-                th(scrope="row")
-                td
-                  a(href="/teacher/active/"+student.user._id).text-light #{student.user.lastname} #{student.user.firstname} #{student.user.middlename}
+      if student
+        h2.text-white.text-center #{student.lastname} #{student.firstname} #{student.middlename}
+      div(role="tablist").list-group
+        if repositories
+          each repository in repositories
+            a(href='/teacher/closed/' + student._id +'/' +repository._id, role="tab").list-group-item.list-group-item-action.bg-dark
+              h3.text-primary #{repository.title}
+              p.text-warning #{repository.updateAt}
+        else 
+          h2.text-primary Пока нет репозиториев

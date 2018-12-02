@@ -12,8 +12,7 @@ block content
 
       .col-md-5.col-lg-5.col-sm-12
         .form-group
-          form(action="/teacher/closed/"+repository.user._id+"/"+repository._id, method="post")
-            button(type="submit").form-control.btn.btn-primary Закрыть
+          button(type="button", data-toggle="modal" data-target="#suremodal").btn.btn-primary Закрыть
         nav(aria-label="breadcrumb", data-toggle="tooltip", data-placement="top", title="Путь раздела.")
           ol(style="background-color:rgb(151, 153, 155); border-color:#e38c8c !important;").breadcrumb.bg-dark.border
             if path
@@ -60,3 +59,18 @@ block content
                           label(for=task.name).label-success
             .form-control.bg-dark.border-0
               button(type="submit").btn.btn-primary Готово
+
+      div(id="suremodal",  tabindex="-1", role="dialog", aria-labelledby="exampleModalLabel", aria-hidden="true").modal.fade
+        div(role="document").modal-dialog
+          .modal-content
+            .modal-header
+              h5(id="suremodallabel").modal-title Закрытие репозитория
+              button(type="button", data-dismiss="modal", aria-label="Отменить").close
+                span(aria-hidden="true") &times;
+            .modal-body
+              p Вы точно уверены, что хотите закрыть репозиторий 
+                b #{repository.title}?
+            .modal-footer
+              button(type="button", data-dismiss="modal").btn.btn-secondary Отменить
+              form(action="/teacher/active/"+repository.user._id+"/"+repository._id, method="post")
+                button(type="submit").btn.btn-primary Закрыть

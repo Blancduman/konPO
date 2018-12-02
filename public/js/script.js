@@ -133,5 +133,10 @@ $(document).ready(function() {
         });
         window.location.replace(ap+"student");
     });
-
+    var demo1 = $('select[name="duallistbox[]"]').bootstrapDualListbox({
+        nonSelectedListLabel: 'Non-selected',
+        selectedListLabel: 'Selected',
+        preserveSelectionOnMove: 'moved',
+        moveOnSelect: false
+    });
 })

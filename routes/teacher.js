@@ -4,7 +4,7 @@ const router = require('express').Router(),
         TeacherGetActiveRepositories,
         TeacherCloseStudentRepository,
         TeacherGetStudentActiveRepositories,
-        TeacherGetClosedRepositories,
+        TeacherGetClosedStudentsRepositories,
         TeacherGetStudentActiveRepository,
         TeacherGetStudentClosedRepositories,
         TeacherGetStudentClosedRepository,
@@ -15,7 +15,7 @@ router.get('/', isAuth, TeacherGetCurrentStudents);
 router.get('/active/:studentid', isAuth, TeacherGetStudentActiveRepositories);
 router.get('/active/:studentid/:repositoryid', isAuth, TeacherGetStudentActiveRepository);
 router.post('/active/:studentid/:repositoryid', isAuth, TeacherCloseStudentRepository);
-router.get('/closed', isAuth, TeacherGetClosedRepositories);
+router.get('/closed', isAuth, TeacherGetClosedStudentsRepositories);
 router.get('/closed/:studentid', isAuth, TeacherGetStudentClosedRepositories);
 router.get('/closed/:studentid/:repositoryid', isAuth, TeacherGetStudentClosedRepository);
 router.get('/closed/download/:studentid/:repositoryid', isAuth, TeacherDownloadStudentClosedRepository);

@@ -2,7 +2,7 @@ extends ./includes/layout
 
 block content
   .row
-    h1.text-center #{student.lastname} #{student.firstname} #{student.middlename}
+    h1.text-center.text-primary #{repository.user.lastname} #{repository.user.firstname} #{repository.user.middlename}
     form(action="/teacher/closed/"+repository.user+"/"+repository._id)
       .form-group
         select(multiple, name="duallistbox[]")
@@ -10,6 +10,8 @@ block content
             option(value=user._id) #{user.lastname} #{user.firstname} #{user.middlename}
           each user in access
             option(value=user._id, selected) #{user.lastname} #{user.firstname} #{user.middlename}
+
+  
   
   script.
     $(document).ready(function() {
@@ -19,5 +21,5 @@ block content
         preserveSelectionOnMove: 'moved',
         moveOnSelect: false
       });
-    }
+    });
   

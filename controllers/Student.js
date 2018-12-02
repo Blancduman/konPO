@@ -9,7 +9,8 @@ const uuidv4 = require('uuid/v4'),
       TEACHER = require('../constants').TEACHER,
       _Sections = require('../constants').SECTIONS,
       path = require('path'),
-      uploader = require('formidable');
+      formidable  = require('formidable'),
+      fs = require('fs');
 
 const GenerateSection = (name, repoId) => {
   let section = new Section();
@@ -23,7 +24,53 @@ const GenerateSection = (name, repoId) => {
 module.exports.StudentPostImageToProfile = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
-      
+      if (user.role === STUDENT) {
+        var form = new formidable.IncomingForm();
+        var files = [];
+        //form.uploadDir = '../public/multipart';
+        //form.keepExtensions = true;
+        //form.maxFieldsSize   = 5 * 1024 * 1024;
+        
+        // , (err, fields, files) => {
+        //   console.log('a', files);
+        //   var imageFile = files.newprofilepicture;
+        //   if (imageFile) {
+        //     var name = imageFile.name,
+        //         path = imageFile.path,
+        //         type = imageFile.type;
+        //     if (type.indexOf('image') != -1) {
+        //       var outputPath = "..public/multipart/" + name + "_" + Date.now();
+        //       fs.rename(path, outputPath, (err) => {
+        //         res.redirect('/student/profile');
+        //       })
+        //     } else {
+        //       fs.unlink(path, (err) => {
+        //         res.send(400);
+        //       })
+        //     }
+        //   } else { 
+        //     res.send(404);
+        //   }
+        // }
+
+        form.parse(req);
+        form
+          .on('fileBegin',function(name,file){
+            file.path = __dirname + '/data/';
+          })
+          .on('progress',function(bytesReceived,bytesExpected){
+              console.log('progress-' + bytesReceived +'/' + bytesExpected);
+          })
+          .on('aborted', function(){
+              console.log('aborted');
+          })
+          .on('error', function(){
+              console.log('error');
+          })
+          .on('end', function(){
+              console.log('end');
+          });
+      }
     })
 }
 

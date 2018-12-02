@@ -31,7 +31,7 @@ router.get('/closed_repository/:repositoryid', isAuth, StudentDownloadClosedRepo
 
 router.get('/profile', isAuth, StudentGetProfilePage);
 router.put('/profile', isAuth, StudentEditProfile);
-router.put('/profile', isAuth, StudentPostImageToProfile);
+router.post('/profile', isAuth, StudentPostImageToProfile);
 
 
 //file system here but later

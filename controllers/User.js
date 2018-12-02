@@ -221,7 +221,6 @@ module.exports.CookieChecker = async (req, res, next) => {
         return res.redirect('/');
       }
     } else {
-      console.log('UserContrl 215');
       res.clearCookie('usertoken', {path: '/'});
       res.clearCookie('keys', {path: '/'});
       req.logout();

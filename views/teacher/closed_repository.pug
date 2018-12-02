@@ -3,9 +3,9 @@ extends ./includes/layout
 block content
   .row
     h1.text-center.text-primary #{repository.user.lastname} #{repository.user.firstname} #{repository.user.middlename}
-    form(action="/teacher/closed/"+repository.user+"/"+repository._id).rounded.text-white
+    form(action="/teacher/closed/"+repository.user._id+"/"+repository._id, method="post").rounded.text-white
       .form-group
-        select(multiple, name="duallistbox[]")
+        select(multiple, name="duallistbox")
           each user in users
             option(value=user._id) #{user.lastname} #{user.firstname} #{user.middlename}
           each user in access

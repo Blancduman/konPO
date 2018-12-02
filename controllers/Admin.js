@@ -124,7 +124,6 @@ module.exports.AdminGetPageNewTeacher = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (user.role === ADMIN) {
-        console.log('yes user');
         return res.render('admin/new_teacher', {
           user: user
         });
@@ -133,7 +132,6 @@ module.exports.AdminGetPageNewTeacher = (req, res, next) => {
 }
 
 module.exports.AdminAddNewTeacher = (req, res, next) => {
-  console.log('adding');
   req.checkBody('username', 'Укажите логин.').notEmpty();
   req.checkBody('email', 'Укажите почту.').notEmpty().isEmail();
   req.checkBody('firstname', 'Укажите имя.').notEmpty();
@@ -142,7 +140,6 @@ module.exports.AdminAddNewTeacher = (req, res, next) => {
   req.checkBody('password', 'Укажите пароль').notEmpty().equals(req.body.password2);
   var errors = req.validationErrors();
   if (errors) {
-    console.log('cnt_Admin 139', errors);
     res.render('admin/new_teacher', {
       errors: errors
     });
@@ -155,7 +152,6 @@ module.exports.AdminAddNewTeacher = (req, res, next) => {
             })
             .then(user => {
               if (user) {
-                console.log('cnt_Admin 145');
                 req.flash('message', 'Пользователь с таким логином уже существует.');
                 res.redirect('admin/new_teacher');
               } else {

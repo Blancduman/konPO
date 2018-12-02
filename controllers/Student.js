@@ -18,7 +18,6 @@ const GenerateSection = (name, repoId) => {
   section.save();
   return section;
 }
-console.log(__dirname);
 
 module.exports.StudentGetProfilePage = (req, res, next) => {
   User.findOne(req.user)

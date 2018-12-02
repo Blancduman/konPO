@@ -184,12 +184,15 @@ Array.prototype.diff = function (a) {
   });
 }
 const diff2 = function(a, b) {
-  let c = [];
+  let c = [],
+  k = true;
   a.forEach(x => {
     b.forEach(y => {
-      if (x._id.toString() !== y._id.toString())
-        c.push(x);
+      if (x._id.toString() === y._id.toString()){
+        k = false;
+      }
     });
+    if (k) c.push(x);
   });
   return c;
 }

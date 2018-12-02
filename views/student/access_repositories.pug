@@ -6,8 +6,9 @@ block content
       div(role="tablist").list-group
         each repository in repositories
           div(role="tab").list-group-item.bg-dark
-            h3.text-primary #{repository.name}
-            h6.text-light Дал поступ
-              b.text-success #{repository.teacher}
+            h3.text-primary #{repository.title}
+            h6.text-light Дал поступ 
+              each teacher in repository.teacher
+                b.text-success #{teacher.lastname} #{teacher.firstname} #{teacher.middlename};
             a(href="/repository/access/"+repository._id style="cursor: pointer;").text-light
               b Скачать

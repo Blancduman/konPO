@@ -102,6 +102,11 @@ module.exports.StudentGetAccessedRepositories = (req, res, next) => {
     .then(user => {
       if (user.role === STUDENT) {
         Repository.find({access: user._id, status: false})
+          .populate({
+            path: 'teacher',
+            select: '_id firstname lastname middlename'
+          })
+          .exec()
           .then(repos => {
             return res.render('student/access_repositories', {repositories: repos, user: user});
           }).catch(next);

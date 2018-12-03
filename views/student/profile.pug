@@ -6,11 +6,10 @@ block content
       .text-center.pb-2
         h4.text-primary Фотография
         img(src=user.image, alt=user.firstname).avatar.img-circle.img-thumbnail
-      .custom-file
         form(enctype="multipart/form-data" method="post", action="/student/profile")
-          input(type="file", name="newprofilepicture", id="validatedCustomFile").custom-fire-input
-          label(for="validatedCustomFile").custom-file-label 
-          button(type="submit").btn.btn-lg.btn-primary.mt-3 Загрузить
+          .form-group
+            input(type="file", name="newprofilepicture", id="exampleFormControlFile1").form-control-file
+            button(type="submit").btn.btn-lg.btn-primary.mt-3 Загрузить
     .mx-auto.col-md-8.col-lg-8.col-sm-12
       form(action="/student/profile").form.student.edit-profile
         .form-group

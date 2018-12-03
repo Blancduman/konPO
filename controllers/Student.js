@@ -26,12 +26,42 @@ module.exports.StudentPostImageToProfile = (req, res, next) => {
     .then(user => {
       if (user.role === STUDENT) {
         var form = new formidable.IncomingForm();
-        var files = [];
-        //form.uploadDir = '../public/multipart';
-        //form.keepExtensions = true;
-        //form.maxFieldsSize   = 5 * 1024 * 1024;
+        form.parse(req);
+        form.uploadDir = path.join(__dirname, "/../private/tmp");
+        form.maxFileSize = 5 * 1024 * 1024;
+
+        form.on("fileBegin", (err, file) => {
+          if (file.type.indexOf('image') != -1) {
+            var fileNewName = Date.now() + "_" + file.name;
+            var fileDBPath = "/images/" + user._id + "/";
+            var fileLoadFile = "../public/images/"+ user._id + "/";
+            if (!fs.existsSync(__dirname + "/" +fileLoadFile)){
+              fs.mkdirSync(fileLoadFile);
+            }
+            file.path = path.join(__dirname, fileLoadFile + fileNewName);
+            user.image = fileDBPath + fileNewName;
+            user.save();
+          }
+          // var extension = path.extname(file.name),
+          //     index = (file.name).lastIndexOf(extension),
+          //     onlyName = (file.name).substr(0, index),
+          //     newfileName = onlyName + Date.now() + extension;
+          //     var fileName = path.join(__dirname, "/../public/images/"+user._id+"/"+newfileName);
+          //     file.path = fileName;
+        });
+        form.on('end', () => {
+          res.redirect('/student/profile');
+        })
+        form.on('error', (err) => {
+          res.send(err);
+        });
+        // var form = new formidable.IncomingForm();
+        // var files = [];
+        // form.uploadDir = '../public/multipart';
+        // form.keepExtensions = true;
+        // form.maxFieldsSize   = 5 * 1024 * 1024;
         
-        // , (err, fields, files) => {
+        // form.parse(req, (err, fields, files) => {
         //   console.log('a', files);
         //   var imageFile = files.newprofilepicture;
         //   if (imageFile) {
@@ -42,7 +72,7 @@ module.exports.StudentPostImageToProfile = (req, res, next) => {
         //       var outputPath = "..public/multipart/" + name + "_" + Date.now();
         //       fs.rename(path, outputPath, (err) => {
         //         res.redirect('/student/profile');
-        //       })
+        //       });
         //     } else {
         //       fs.unlink(path, (err) => {
         //         res.send(400);
@@ -51,28 +81,29 @@ module.exports.StudentPostImageToProfile = (req, res, next) => {
         //   } else { 
         //     res.send(404);
         //   }
-        // }
-
-        form.parse(req);
-        form
-          .on('fileBegin',function(name,file){
-            file.path = __dirname + '/data/';
-          })
-          .on('progress',function(bytesReceived,bytesExpected){
-              console.log('progress-' + bytesReceived +'/' + bytesExpected);
-          })
-          .on('aborted', function(){
-              console.log('aborted');
-          })
-          .on('error', function(){
-              console.log('error');
-          })
-          .on('end', function(){
-              console.log('end');
-          });
+        // })
       }
-    })
+  });
 }
+
+        // form.parse(req);
+        // form
+        //   .on('fileBegin',function(name,file){
+        //     file.path = __dirname + '/data/';
+        //   })
+        //   .on('progress',function(bytesReceived,bytesExpected){
+        //       console.log('progress-' + bytesReceived +'/' + bytesExpected);
+        //   })
+        //   .on('aborted', function(){
+        //       console.log('aborted');
+        //   })
+        //   .on('error', function(){
+        //       console.log('error');
+        //   })
+        //   .on('end', function(){
+        //       console.log('end');
+        //   });
+      
 
 module.exports.StudentGetProfilePage = (req, res, next) => {
   User.findOne(req.user)

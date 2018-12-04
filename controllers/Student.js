@@ -21,6 +21,15 @@ const GenerateSection = (name, repoId) => {
   return section;
 }
 
+const ensureExists = (path, cb) => {
+  fs.mkdir(path, err => {
+    if (err) {
+      if (err.code == 'EEXIST') cb(null);
+      else cb(err);
+    } else cb(null);
+  });
+}
+
 module.exports.StudentPostImageToProfile = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
@@ -35,10 +44,12 @@ module.exports.StudentPostImageToProfile = (req, res, next) => {
             var fileNewName = Date.now() + "_" + file.name;
             var fileDBPath = "/images/" + user._id + "/";
             var fileLoadFile = "../public/images/"+ user._id + "/";
-            if (!fs.existsSync(__dirname + "/" +fileLoadFile)){
-              fs.mkdirSync(fileLoadFile);
-            }
+            ensureExists(__dirname +"/"+ fileLoadFile, err => {
+              if (err) console.log(err);
+            });
+            
             file.path = path.join(__dirname, fileLoadFile + fileNewName);
+            console.log(file.path);
             user.image = fileDBPath + fileNewName;
             user.save();
           }

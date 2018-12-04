@@ -76,13 +76,43 @@ module.exports.TeacherGetStudentActiveRepositories = (req, res, next) => {
     }).catch(next);
 };
 
+module.exports.TeacherGetStudentActiveREpositorySection = (req, res, next) => {
+  User.findOne(req.user)
+    .select('_id role firstname lastname middlename')
+    .then(user => {
+      if (user.role === TEACHER) {
+        Repository.findById(req.params.repositoryid)
+          .select('_id section status')
+          // .populate({
+          //   path: 'section',
+          //   populate: {
+          //     path: 'task',
+          //     model: 'Task'
+          //   }
+          // })
+          // .exec()
+          .then(repo => {
+            if (repo.status) {
+              if (repo.section.includes(req.params.sectionid)) {
+                Section.findById(req.params.sectionid)
+                  .populate('task')
+                  .exec()
+                  .then(section => {
+                    return res.send(section);
+                  })
+              }
+            }
+             
+          })
+      }
+    })
+}
+
 module.exports.TeacherGetStudentActiveRepository = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (user.role === TEACHER) {
         Repository.findById(req.params.repositoryid)
-          .populate('section')
-          .exec()
           .then(repo => {
             if (repo.user._id.toString() === req.params.studentid.toString()) {
               return res.render('teacher/repository', {

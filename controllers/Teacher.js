@@ -76,7 +76,7 @@ module.exports.TeacherGetStudentActiveRepositories = (req, res, next) => {
     }).catch(next);
 };
 
-module.exports.TeacherGetStudentActiveREpositorySection = (req, res, next) => {
+module.exports.TeacherGetStudentActiveRepositorySection = (req, res, next) => {
   User.findOne(req.user)
     .select('_id role firstname lastname middlename')
     .then(user => {
@@ -93,16 +93,34 @@ module.exports.TeacherGetStudentActiveREpositorySection = (req, res, next) => {
           // .exec()
           .then(repo => {
             if (repo.status) {
-              if (repo.section.includes(req.params.sectionid)) {
+              if (repo.section.indexOf(req.params.sectionid)!=-1) {
                 Section.findById(req.params.sectionid)
                   .populate('task')
                   .exec()
                   .then(section => {
-                    return res.send(section);
+                    return res.json(section);
                   })
               }
             }
              
+          })
+      }
+    })
+}
+module.exports.TeacherPostStudentActiveRepositorySection = (req, res, next) => {
+  User.findById(req.user)
+    .then(user => {
+      if (user.role === TEACHER) {
+        Repository.findById(req.params.repositoryid)
+          .select('user section')
+          .then(repo => {
+            if (repo.user._id.toString() === req.params.studentid.toString()) {
+              if (repo.section.indexOf(req.params.sectionid) != -1) {
+                console.log(req.body.tasks);
+              }
+            } else {
+              return res.redirect('/teacher');
+            }
           })
       }
     })
@@ -113,6 +131,11 @@ module.exports.TeacherGetStudentActiveRepository = (req, res, next) => {
     .then(user => {
       if (user.role === TEACHER) {
         Repository.findById(req.params.repositoryid)
+          .populate({
+            path: 'section',
+            select: '_id slug name task lastcheck body updatedAt'
+          })
+          .exec()
           .then(repo => {
             if (repo.user._id.toString() === req.params.studentid.toString()) {
               return res.render('teacher/repository', {

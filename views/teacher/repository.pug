@@ -6,7 +6,7 @@ block content
       .col-md-3.col-lg-3.col-sm-12
         div(role="tablist").list-group
           each section in repository.section
-            a(href="/repository/section/"+section._id, role="tab").list-group-item.list-group-item-action.bg-dark.pb-0
+            a(href="/teacher/active/"+repository.user._id+"/"+repository._id + "/" + section._id, role="tab", class="section-select").list-group-item.list-group-item-action.bg-dark.pb-0
               h6.text-primary #{section.name}
               p.text-success #{section.updatedAt}
 
@@ -43,8 +43,12 @@ block content
         h2.text-primary.text-center.mb-0 #{repository.title}
         h6.text-primary.text-center.section-title empty
         .panel.panel-default
-          form
-            ul.list-group.text-light
+          .input-group
+            input(type="text", class="form-control add-task", placeholder="Добавить задание...")
+            .input-group-append
+              button(class="btn-add-task btn btn-outline-danger text-primary") Добавить
+          form.section-form
+            ul.list-group.text-light.task-list
               if session
                 if session.tasks
                   each task in session.tasks
@@ -52,11 +56,11 @@ block content
                       task.body
                       .material-switch.pull-right
                         if task.status
-                          input(type="checkbox", name=task.name, checked)
-                          label(for=task.name).label-success
+                          input(type="checkbox", name="task[]", checked)
+                          label(for='task[]').label-success
                         else 
-                          input(type="checkbox", name=task.name)
-                          label(for=task.name).label-success
+                          input(type="checkbox", name='task[]')
+                          label(for='task[]').label-success
             .form-control.bg-dark.border-0
               button(type="submit").btn.btn-primary Готово
 

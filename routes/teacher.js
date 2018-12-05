@@ -1,7 +1,7 @@
 const router = require('express').Router(),
       isAuth = require('../lib/isAuthenticated'),
       { TeacherGetCurrentStudents, 
-        TeacherGetActiveRepositories,
+        TeacherGetStudentActiveRepositorySection,
         TeacherCloseStudentRepository,
         TeacherGetStudentActiveRepositories,
         TeacherGetClosedStudentsRepositories,
@@ -9,6 +9,7 @@ const router = require('express').Router(),
         TeacherGetStudentClosedRepositories,
         TeacherGetStudentClosedRepository,
         TeacherDownloadStudentClosedRepository,
+        TeacherPostStudentActiveRepositorySection,
         TeacherGiveAccessStudents
       } = require('../controllers/Teacher');
 
@@ -16,6 +17,8 @@ router.get('/', isAuth, TeacherGetCurrentStudents);
 router.get('/active/:studentid', isAuth, TeacherGetStudentActiveRepositories);
 router.get('/active/:studentid/:repositoryid', isAuth, TeacherGetStudentActiveRepository);
 router.post('/active/:studentid/:repositoryid', isAuth, TeacherCloseStudentRepository);
+router.get('/active/:studentid/:repositoryid/:sectionid', isAuth, TeacherGetStudentActiveRepositorySection);
+router.post('/active/:studentid/:repositoryid/:sectionid', isAuth, TeacherPostStudentActiveRepositorySection);
 router.get('/closed', isAuth, TeacherGetClosedStudentsRepositories);
 router.get('/closed/:studentid', isAuth, TeacherGetStudentClosedRepositories);
 router.get('/closed/:studentid/:repositoryid', isAuth, TeacherGetStudentClosedRepository);

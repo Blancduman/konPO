@@ -116,9 +116,12 @@ module.exports.TeacherPostStudentActiveRepositorySection = (req, res, next) => {
           .select('user section')
           .then(repo => {
             if (repo.user._id.toString() === req.params.studentid.toString()) {
+              console.log(req.body.tasks);
+              console.log(req.body.tasks[0].body);
               if (repo.section.indexOf(req.params.sectionid) != -1) {
-                console.log(req.body.tasks);
+                console.log('da');
               }
+              return;
             } else {
               return res.redirect('/teacher');
             }

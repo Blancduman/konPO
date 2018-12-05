@@ -9,8 +9,7 @@ $(document).ready(function() {
     .done(function(data) {
       console.log(data);
       $('.section-form')
-        .attr('action', a)
-        .attr('method', 'post');
+        .attr('action', a);
       var list = $('.task-list');
       list.empty();
       data.task.forEach(element => {
@@ -48,11 +47,12 @@ $(document).ready(function() {
   $('.btn-add-task').on('click', function() {
     if ($('.add-task').val() != '') {
       var id = Math.floor(Math.random() * 26) + Date.now();
+      var val = $('.add-task').val();
       var list =  $('.list-group.text-light.task-list');
       var li = $('<li/>')
-          .addClass('list-group-item bg-dark')
+          .addClass('list-group-item bg-dark task-item')
           .css('word-wrap', 'break-word')
-          .text($('.add-task').val())
+          .text(val)
           .appendTo(list);
           $('.add-task').val('');
 
@@ -60,7 +60,7 @@ $(document).ready(function() {
           .addClass('material-switch pull-right')
           .appendTo(li);
       $('<input/>')
-          .attr('name', 'tasks[]')
+          .attr('name', 'tasks['+id+']['+val+']')
           .attr('type', 'checkbox')
           .attr('id', id)
           .appendTo(dv);
@@ -71,13 +71,30 @@ $(document).ready(function() {
       $('<button/>')
         .addClass('btn btn-secondary delete-task p-1')
         .text('X')
-        .attr('id', id)
         .on('click', function() {
           dv.parent().remove();
         })
         .appendTo(dv);
   }
   });
+  $('.task-submit-button').on('click', function(event) {
+    event.preventDefault();
+    var list = $('.list-group-item.bg-dark.task-item');
+    console.log(list);
+    console.log(list.children());
+    var daTa = [];
+    list.children().each(function() {
+      daTa.push({"body": $(this).parent().text(), "status": $(this).find('input').is(':checked')?true:false});
+    });
+    console.log(daTa);
+    $.ajax({
+      type: 'POST',
+      url: $('.section-form').attr('action'),
+      data: {daTa},
+      dataType: 'json'
+    });
+  });
+  
   // $('.delete-task').on('click', function(event) {
   //   console.log(event.target);
   //   $(event.target).parent().remove();

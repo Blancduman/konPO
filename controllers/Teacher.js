@@ -108,6 +108,7 @@ module.exports.TeacherGetStudentActiveRepositorySection = (req, res, next) => {
     })
 }
 module.exports.TeacherPostStudentActiveRepositorySection = (req, res, next) => {
+  console.log(req.body);
   User.findById(req.user)
     .then(user => {
       if (user.role === TEACHER) {

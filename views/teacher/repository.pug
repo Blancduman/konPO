@@ -43,10 +43,7 @@ block content
         h2.text-primary.text-center.mb-0 #{repository.title}
         h6.text-primary.text-center.section-title empty
         .panel.panel-default
-          .input-group
-            input(type="text", class="form-control add-task", placeholder="Добавить задание...")
-            .input-group-append
-              button(class="btn-add-task btn btn-outline-danger text-primary") Добавить
+          .input-group.div-add-task
           form.section-form
             ul.list-group.text-light.task-list
               if session
@@ -62,7 +59,6 @@ block content
                           input(type="checkbox", name='task[]')
                           label(for='task[]').label-success
             .form-control.bg-dark.border-0
-            button.btn.btn-primary.task-submit-button Готово
 
       div(id="suremodal",  tabindex="-1", role="dialog", aria-labelledby="exampleModalLabel", aria-hidden="true").modal.fade
         div(role="document").modal-dialog

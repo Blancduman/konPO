@@ -121,20 +121,32 @@ module.exports.TeacherPostStudentActiveRepositorySection = (req, res, next) => {
                 Section.findById(req.params.sectionid)
                   .then((section) => {
                     section.task = [];
-                    let tmp = [];
-                    _tasks.forEach( _task => {
-                      let _t = new Task();
+                    const saver = (task) => {
+                      let _t  = new Task();
                       _t.section = section;
-                      _t.body =_task.body;
-                      _t.status = _task.status;
-                      _t.save()
-                      .then((t) => {
-                        tmp.push(t);
-                        section.task.push(t);
-                      });
+                      _t.body = task.body;
+                      _t.status = task.status;
+
+                      return _t.save();
+                    }
+                    return Promise.all(_tasks.map(saver)).then(tasks => {
+                      section.task=tasks;
+                      section.save();
                     });
+                    // let tmp = [];
+                    // _tasks.forEach( _task => {
+                    //   let _t = new Task();
+                    //   _t.section = section;
+                    //   _t.body =_task.body;
+                    //   _t.status = _task.status;
+                    //   _t.save()
+                    //   .then((t) => {
+                    //     tmp.push(t);
+                    //     section.task.push(t);
+                    //   });
+                    // });
                     
-                  });
+                  })
               }
               return;
             } else {

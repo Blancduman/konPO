@@ -221,11 +221,15 @@ module.exports.StudentManagerSectionTask = (req, res, next) => {
       if (user.role === STUDENT) {
         Section.findById(req.params.sectionid)
           .then(section => {
-            if (section.repository === req.params.repositoryid) {
-              let _tasks = req.body.tasks;
+            if (section.repository.id.toString('hex') === req.params.repositoryid) {
+              let _tasks = JSON.parse(req.body.tasks);
               _tasks.forEach(_task => {
                 //EditTask(_task.status, _task._id);
-                Task.findByIdAndUpdate(_task._id, {$set: {status: _task.status}});
+                //Task.findByIdAndUpdate(_task.id, {$set: {status: _task.status}});
+                Task.findById(_task.id).then(tsk => {
+                  tsk.status = _task.status; 
+                  tsk.save();
+                });
               });
             }
           }).catch(next);
@@ -325,16 +329,34 @@ module.exports.StudentGetSectionTask = (req, res, next) => {
     .then(user => {
       if (user.role === STUDENT) {
         Repository.findById(req.params.repositoryid)
+          .select('_id section status')
           .then(repo => {
-            if (repo.user === user._id) {
-              Section.findById(req.params.sectionid)
-                .then(section => {
-                  if (section.repository === req.params.repositoryid) {
-                    return res.send(section);
-                  }
-                }).catch(next);
+            if (repo.status) {
+              if (repo.section.indexOf(req.params.sectionid)!=-1) {
+                Section.findById(req.params.sectionid)
+                  .populate('task')
+                  .exec()
+                  .then(section => {
+                    return res.json(section);
+                  })
+              }
             }
-          }).catch(next);
+             
+          })
+        // Repository.findById(req.params.repositoryid)
+        //   .then(repo => {
+        //     if (repo.user.id.toString('hex') === user.id) {
+        //       Section.findById(req.params.sectionid)
+        //         .populate('task')
+        //         .exec()
+        //         .then(section => {
+        //           console.log(section);
+        //           if (section.repository === req.params.repositoryid) {
+        //             return res.json(section);
+        //           }
+        //         }).catch(next);
+        //     }
+        //   }).catch(next);
       }
     }).catch(next);
 }

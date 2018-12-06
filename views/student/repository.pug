@@ -6,7 +6,7 @@ block content
       .col-md-3.col-lg-3.col-sm-12
         div(role="tablist").list-group
           each section in repository.section
-            a(href="/repository/section/"+section._id, role="tab").list-group-item.list-group-item-action.bg-dark.pb-0
+            a(href="/student/repository/"+repository._id + "/" + section._id, role="tab", class="section-select").list-group-item.list-group-item-action.bg-dark.pb-0
               h6.text-primary #{section.name}
               p.text-success #{section.updatedAt}
 
@@ -39,10 +39,10 @@ block content
                       a(href="#").text-light #{file.name}
       div(style="border-color:#e38c8c !important; border-radius: 10px;").col-md-4.col-lg-4.col-sm-12.border
         h2.text-primary.text-center.mb-0 #{repository.title}
-        h6.text-primary.text-center.section-title empty
+        h6.text-primary.text-center.section-title 
         .panel.panel-default
-          form
-            ul.list-group.text-light
+          form.section-form
+            ul.list-group.text-light.task-list
               if session
                 if session.tasks
                   each task in session.tasks
@@ -56,4 +56,3 @@ block content
                           input(type="checkbox", name=task.name)
                           label(for=task.name).label-success
             .form-control.bg-dark.border-0
-              button(type="submit").btn.btn-primary Готово

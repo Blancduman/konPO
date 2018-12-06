@@ -7,6 +7,7 @@ $(document).ready(function() {
       type: 'get'
     })
     .done(function(data) {
+      $('.text-primary.text-center.section-title').text(data.name);
       var divdiv = $('.div-add-task');
       $('.form-control.bg-dark.border-0').empty();
       divdiv.empty();

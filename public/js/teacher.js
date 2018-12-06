@@ -81,11 +81,9 @@ $(document).ready(function() {
         $('<button/>').addClass('btn btn-primary task-submit-button').text('Готово').on('click', function(event) {
           event.preventDefault();
           var list = $('.list-group-item.bg-dark.task-item');
-          console.log(list);
-          console.log(list.children());
           var daTa = [];
           list.children().each(function() {
-            daTa.push({id: $(this).find('input').attr('id'), body: $(this).parent().text(), status: $(this).find('input').is(':checked')?true:false});
+            daTa.push({id: $(this).find('input').attr('id'), body: $(this).parent().text().slice(0,-1), status: $(this).find('input').is(':checked')?true:false});
           });
           console.log(daTa);
           console.log(JSON.stringify(daTa));

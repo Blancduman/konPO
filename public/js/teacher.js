@@ -84,14 +84,14 @@ $(document).ready(function() {
     console.log(list.children());
     var daTa = [];
     list.children().each(function() {
-      daTa.push({body: $(this).parent().text(), status: $(this).find('input').is(':checked')?true:false});
+      daTa.push({id: $(this).find('input').attr('id'), body: $(this).parent().text(), status: $(this).find('input').is(':checked')?true:false});
     });
     console.log(daTa);
     console.log(JSON.stringify(daTa));
     $.ajax({
       type: 'POST',
       url: $('.section-form').attr('action'),
-      dataType: 'application/json',
+      dataType: 'json',
       data: {'tasks': JSON.stringify(daTa)}
     });
     //$.post($('.section-form').attr('action'), {tasks: daTa});

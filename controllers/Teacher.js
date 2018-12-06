@@ -108,7 +108,6 @@ module.exports.TeacherGetStudentActiveRepositorySection = (req, res, next) => {
     })
 }
 module.exports.TeacherPostStudentActiveRepositorySection = (req, res, next) => {
-  console.log(req.body);
   User.findById(req.user)
     .then(user => {
       if (user.role === TEACHER) {
@@ -116,10 +115,26 @@ module.exports.TeacherPostStudentActiveRepositorySection = (req, res, next) => {
           .select('user section')
           .then(repo => {
             if (repo.user._id.toString() === req.params.studentid.toString()) {
-              console.log(req.body.tasks);
-              console.log(req.body.tasks[0].body);
+              var _tasks = JSON.parse(req.body.tasks);
               if (repo.section.indexOf(req.params.sectionid) != -1) {
-                console.log('da');
+                Task.deleteMany({section: repo.section._id});
+                Section.findById(req.params.sectionid)
+                  .then((section) => {
+                    section.task = [];
+                    let tmp = [];
+                    _tasks.forEach( _task => {
+                      let _t = new Task();
+                      _t.section = section;
+                      _t.body =_task.body;
+                      _t.status = _task.status;
+                      _t.save()
+                      .then((t) => {
+                        tmp.push(t);
+                        section.task.push(t);
+                      });
+                    });
+                    
+                  });
               }
               return;
             } else {

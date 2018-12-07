@@ -77,11 +77,26 @@ module.exports.StudentGetFileRepository = (req, res, next) => {
         fs.readdir(__dirname+'../private/repositories/'+req.params.repositoryid+'/'+req.params.way, (err, data) => {
           aaa(data).then(a => {
             b = [a[0].filter(el => {return el != null;}), a[1].filter(el => {return el != null;})]
-            res.json(b);
+            res.json({_dir: b[0], _file: b[1]});
           })
         })
       }
-    })
+    });
+}
+module.exports.StudentGetDirRepository = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === STUDENT) {
+        fs.readdir(__dirname+'../private/repositories/'+req.params.repositoryid+'/'+req.params.way, (err, data) => {
+          if (data !== undefined) {
+            aaa(data).then(a => {
+              b = [a[0].filter(el => {return el != null;}), a[1].filter(el => {return el != null;})]
+              res.json({_dir: b[0], _file: b[1]});
+            })
+          } else res.json({_dir: [], _file: []});
+        })
+      }
+    });
 }
 
 module.exports.StudentPostImageToProfile = (req, res, next) => {

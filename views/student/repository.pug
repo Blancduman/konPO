@@ -18,25 +18,22 @@ block content
                 li.breadcrumb-item #{folder}
             li.breadcrumb-item.active #{currentFolder}
         table.table.table-dark
-          tbody
-            tr
-              th(scope="row")
-                td
-                  a(href="#").text-light.pl-3 ..
+          tbody(role="tablist").table-table-table
+            tr.dir-up
+              td
+                a(href="#", role="tab").text-light.pl-3.dir-up-a ..
             if dirs
               each dir in dirs
-                tr
-                  th(scope="row")
-                    td
-                      img(src="http://localhost:3000/images/folder.png", alt="Папочка", style="width: 5%;")
-                      a(href='student/repository/'+repository.id+'/folder/'+dir).text-light #{dir}
+                tr.dir
+                  td
+                    img(src="http://localhost:3000/images/folder.png", alt="Папочка", style="width: 5%;")
+                    a(href=repository.id+'/folder/'+dir, role="tab").text-light.dir-get #{dir}
             if files
               each file in files
-                tr
-                  th(scope="row")
-                    td
-                      img(src="http://localhost:3000/images/file.png", alt="Файлик", style="width: 5%;")
-                      a(href='student/repository/'+repository.id+'/file/'+file).text-light #{file}
+                tr.file
+                  td
+                    img(src="http://localhost:3000/images/file.png", alt="Файлик", style="width: 5%;")
+                    a(href=repository.id+'/file/'+file, role="tab").text-light #{file}
       div(style="border-color:#e38c8c !important; border-radius: 10px;").col-md-4.col-lg-4.col-sm-12.border
         h2.text-primary.text-center.mb-0 #{repository.title}
         h6.text-primary.text-center.section-title 

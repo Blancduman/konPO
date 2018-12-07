@@ -10,7 +10,10 @@ const router = require('express').Router(),
         TeacherGetStudentClosedRepository,
         TeacherDownloadStudentClosedRepository,
         TeacherPostStudentActiveRepositorySection,
-        TeacherGiveAccessStudents
+        TeacherGiveAccessStudents,
+        TeacherPostImageToProfile,
+        TeacherGetProfilePage,
+        TeacherEditProfile
       } = require('../controllers/Teacher');
 
 router.get('/', isAuth, TeacherGetCurrentStudents);
@@ -24,6 +27,10 @@ router.get('/closed/:studentid', isAuth, TeacherGetStudentClosedRepositories);
 router.get('/closed/:studentid/:repositoryid', isAuth, TeacherGetStudentClosedRepository);
 router.post('/closed/:studentid/:repositoryid', isAuth, TeacherGiveAccessStudents);
 router.get('/closed/download/:studentid/:repositoryid', isAuth, TeacherDownloadStudentClosedRepository);
+
+router.get('/profile', isAuth, TeacherGetProfilePage);
+router.put('/profile', isAuth, TeacherEditProfile);
+router.post('/profile', isAuth, TeacherPostImageToProfile);
 
 //file system here but later
 

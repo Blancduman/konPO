@@ -9,6 +9,12 @@
          "request": "launch",
          "name": "Launch Program",
          "program": "${workspaceFolder}\\index.js"
+      },
+      {
+         "type": "node",
+         "request": "launch",
+         "name": "Launcasdasdh Program",
+         "program": "${workspaceFolder}\\test.js"
       }
    ]
 }

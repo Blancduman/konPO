@@ -30,6 +30,44 @@ const ensureExists = (path, cb) => {
   });
 }
 
+module.exports.StudentLoadFileToRepository = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === STUDENT) {
+        var form = new formidable.IncomingForm();
+        form.parse(req);
+        form.uploadDir = path.join(__dirname, "/../private/tmp");
+        form.maxFileSize = 25 * 1024 * 1024;
+
+        form.on("fileBegin", (err, file) => {
+          var fileNewName  = file.name + "_" + Date.now();
+          var fileLoadFile = "../private/repositories/" + req.params.repositoryid + "/" + req.params.way + "/";
+          ensureExists(__dirname + "/" + fileLoadFile, err => {
+            if (err) console.log(err);
+          });
+          
+          file.path = path.join(__dirname, fileLoadFile + fileNewName);
+          console.log(file.path);
+        });
+        form.on('end', () => {
+          res.redirect('/student/repository/'+req.params.repositoryid);
+        });
+        form.on('error', (err) => {
+          res.send(err);
+        });
+      }
+    });
+}
+
+module.exports.StudentGetFileRepository = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === STUDENT) {
+        //fs.
+      }
+    })
+}
+
 module.exports.StudentPostImageToProfile = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
@@ -53,12 +91,6 @@ module.exports.StudentPostImageToProfile = (req, res, next) => {
             user.image = fileDBPath + fileNewName;
             user.save();
           }
-          // var extension = path.extname(file.name),
-          //     index = (file.name).lastIndexOf(extension),
-          //     onlyName = (file.name).substr(0, index),
-          //     newfileName = onlyName + Date.now() + extension;
-          //     var fileName = path.join(__dirname, "/../public/images/"+user._id+"/"+newfileName);
-          //     file.path = fileName;
         });
         form.on('end', () => {
           res.redirect('/student/profile');
@@ -66,54 +98,9 @@ module.exports.StudentPostImageToProfile = (req, res, next) => {
         form.on('error', (err) => {
           res.send(err);
         });
-        // var form = new formidable.IncomingForm();
-        // var files = [];
-        // form.uploadDir = '../public/multipart';
-        // form.keepExtensions = true;
-        // form.maxFieldsSize   = 5 * 1024 * 1024;
-        
-        // form.parse(req, (err, fields, files) => {
-        //   console.log('a', files);
-        //   var imageFile = files.newprofilepicture;
-        //   if (imageFile) {
-        //     var name = imageFile.name,
-        //         path = imageFile.path,
-        //         type = imageFile.type;
-        //     if (type.indexOf('image') != -1) {
-        //       var outputPath = "..public/multipart/" + name + "_" + Date.now();
-        //       fs.rename(path, outputPath, (err) => {
-        //         res.redirect('/student/profile');
-        //       });
-        //     } else {
-        //       fs.unlink(path, (err) => {
-        //         res.send(400);
-        //       })
-        //     }
-        //   } else { 
-        //     res.send(404);
-        //   }
-        // })
       }
   });
-}
-
-        // form.parse(req);
-        // form
-        //   .on('fileBegin',function(name,file){
-        //     file.path = __dirname + '/data/';
-        //   })
-        //   .on('progress',function(bytesReceived,bytesExpected){
-        //       console.log('progress-' + bytesReceived +'/' + bytesExpected);
-        //   })
-        //   .on('aborted', function(){
-        //       console.log('aborted');
-        //   })
-        //   .on('error', function(){
-        //       console.log('error');
-        //   })
-        //   .on('end', function(){
-        //       console.log('end');
-        //   });
+};
       
 
 module.exports.StudentGetProfilePage = (req, res, next) => {
@@ -224,8 +211,6 @@ module.exports.StudentManagerSectionTask = (req, res, next) => {
             if (section.repository.id.toString('hex') === req.params.repositoryid) {
               let _tasks = JSON.parse(req.body.tasks);
               _tasks.forEach(_task => {
-                //EditTask(_task.status, _task._id);
-                //Task.findByIdAndUpdate(_task.id, {$set: {status: _task.status}});
                 Task.findById(_task.id).then(tsk => {
                   tsk.status = _task.status; 
                   tsk.save();
@@ -308,13 +293,13 @@ module.exports.StudentNewRepositoryCreate = (req, res, next) => {
           repository.description = req.body.description;
           repository.user = user;
           repository.teacher = req.body.teachers;
-          //
           repository.slugify();
 
           repository.save()
             .then(repo => {
               repo.section = Array.from(_Sections, x => GenerateSection(x, repo._id));
               repo.save(() => {
+
                 req.flash('success', 'Репозиторий создан.');
                 return res.redirect('/student');
               });
@@ -342,21 +327,7 @@ module.exports.StudentGetSectionTask = (req, res, next) => {
               }
             }
              
-          })
-        // Repository.findById(req.params.repositoryid)
-        //   .then(repo => {
-        //     if (repo.user.id.toString('hex') === user.id) {
-        //       Section.findById(req.params.sectionid)
-        //         .populate('task')
-        //         .exec()
-        //         .then(section => {
-        //           console.log(section);
-        //           if (section.repository === req.params.repositoryid) {
-        //             return res.json(section);
-        //           }
-        //         }).catch(next);
-        //     }
-        //   }).catch(next);
+          });
       }
     }).catch(next);
 }

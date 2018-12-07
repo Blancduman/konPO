@@ -159,7 +159,16 @@ $(document).ready(function() {
     });
     //$.post($('.section-form').attr('action'), {tasks: daTa});
   });
-  
+  $('.form.teacher.edit-profile').submit(function(event) {
+    event.preventDefault();
+    $.ajax({
+        type: 'PUT',
+        url: $(this).attr('action'),
+        data: $(this).serializeArray(),
+        dataType: 'json'
+    });
+    window.location.replace(ap+"student");
+  });
   // $('.delete-task').on('click', function(event) {
   //   console.log(event.target);
   //   $(event.target).parent().remove();

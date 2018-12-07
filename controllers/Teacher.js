@@ -107,6 +107,102 @@ module.exports.TeacherGetStudentActiveRepositorySection = (req, res, next) => {
       }
     })
 }
+const ensureExists = (path, cb) => {
+  fs.mkdir(path, err => {
+    if (err) {
+      if (err.code == 'EEXIST') cb(null);
+      else cb(err);
+    } else cb(null);
+  });
+}
+module.exports.TeacherPostImageToProfile = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === TEACHER) {
+        var form = new formidable.IncomingForm();
+        form.parse(req);
+        form.uploadDir = path.join(__dirname, "/../private/tmp");
+        form.maxFileSize = 5 * 1024 * 1024;
+
+        form.on("fileBegin", (err, file) => {
+          if (file.type.indexOf('image') != -1) {
+            var fileNewName = Date.now() + "_" + file.name;
+            var fileDBPath = "/images/" + user._id + "/";
+            var fileLoadFile = "../public/images/"+ user._id + "/";
+            ensureExists(__dirname +"/"+ fileLoadFile, err => {
+              if (err) console.log(err);
+            });
+            
+            file.path = path.join(__dirname, fileLoadFile + fileNewName);
+            console.log(file.path);
+            user.image = fileDBPath + fileNewName;
+            user.save();
+          }
+        });
+        form.on('end', () => {
+          res.redirect('/teacher/profile');
+        })
+        form.on('error', (err) => {
+          res.send(err);
+        });
+      }
+  });
+};
+
+
+module.exports.TeacherGetProfilePage = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === TEACHER) {
+        return res.render('teacher/profile', {user: user});
+      }
+    }).catch(next);
+};
+
+module.exports.TeacherEditProfile = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === STUDENT) {
+        let email = req.body.email, firstname = req.body.firstname, 
+        lastname = req.body.lastname, middlename = req.body.middlename,
+        phone = req.body.phone, 
+        password = req.body.password, password2 = req.body.password2;
+
+        if (email){
+          req.checkBody('email', 'Укажите почту.').notEmpty()
+          req.checkBody('email', 'Укажите правильную почту.').isEmail();
+        }
+        if (firstname){
+          req.checkBody('firstname', 'Укажите имя.').notEmpty();
+        }
+        if (lastname)
+          req.checkBody('lastname', 'Укажите фамилию.').notEmpty();
+        if (middlename)
+          req.checkBody('middlename', 'Укажите отчество.').notEmpty();
+        if (password){
+          req.checkBody('password', 'Укажите пароль.').notEmpty()
+          req.checkBody('password', 'Пароли не совпадают.').equals(password2);
+        }
+        if (phone)
+          req.checkBody('phone', 'Укажите номер.').notEmpty();
+        let errors = req.validationErrors();
+        if (errors) {
+          console.log(errors);
+          return res.render('teacher/profile', {errors:errors, user: user});
+        } else {
+          if (email) user.email = email;
+          if (firstname) user.firstname = firstname;
+          if (lastname) user.lastname = lastname;
+          if (middlename) user.middlename = middlename;
+          if (password) user.setPassword(password);
+          if (phone) user.phone = phone;
+
+          user.save();
+        }
+      }
+    }).catch(next);
+}
+
 module.exports.TeacherPostStudentActiveRepositorySection = (req, res, next) => {
   User.findById(req.user)
     .then(user => {

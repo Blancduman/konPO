@@ -2,16 +2,16 @@ extends ./includes/layout
 
 block content
   .row
-    .mx-auto.col-md-4.col-lg-4.col-sm-12
+    .mx-auto.col-md-4.col-lg-4.col-sm-12.col-xl-4
       .text-center.pb-2
         h4.text-primary Фотография
         img(src=user.image, alt=user.firstname).avatar.img-circle.img-thumbnail
-        form(enctype="multipart/form-data" method="post", action="/student/profile")
+        form(enctype="multipart/form-data" method="post", action="/teacher/profile")
           .form-group
             input(type="file", name="newprofilepicture", id="exampleFormControlFile1").form-control-file
             button(type="submit").btn.btn-lg.btn-primary.mt-3 Загрузить
-    .mx-auto.col-md-6.col-lg-6.col-sm-12
-      form(action="/student/profile").form.student.edit-profile
+    .mx-auto.col-md-6.col-lg-6.col-sm-12.col-xl-6
+      form(action="/teacher/profile").form.teacher.edit-profile
         .form-group
           .col-xs-6
             label(for="firstname")

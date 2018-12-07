@@ -123,14 +123,7 @@ $(document).ready(function() {
         });
         window.location.replace(ap+"admin");
     });
-    $('.form.student.edit-profile').submit(function(event) {
-        event.preventDefault();
-        $.ajax({
-            type: 'PUT',
-            url: $(this).attr('action'),
-            data: $(this).serializeArray(),
-            dataType: 'json'
-        });
-        window.location.replace(ap+"student");
-    });
+    jQuery.ajaxSetup({
+        async: false
+      });
 })

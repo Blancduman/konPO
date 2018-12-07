@@ -28,15 +28,15 @@ block content
                 tr
                   th(scope="row")
                     td
-                      img(src="../images/folder.png", alt="Папочка", style="width: 5%;")
-                      a(href="#").text-light #{dir.name}
+                      img(src="http://localhost:3000/images/folder.png", alt="Папочка", style="width: 5%;")
+                      a(href='student/repository/'+repository.id+'/folder/'+dir).text-light #{dir}
             if files
               each file in files
                 tr
                   th(scope="row")
                     td
-                      img(src="../images/file.png", alt="Файлик", style="width: 5%;")
-                      a(href="#").text-light #{file.name}
+                      img(src="http://localhost:3000/images/file.png", alt="Файлик", style="width: 5%;")
+                      a(href='student/repository/'+repository.id+'/file/'+file).text-light #{file}
       div(style="border-color:#e38c8c !important; border-radius: 10px;").col-md-4.col-lg-4.col-sm-12.border
         h2.text-primary.text-center.mb-0 #{repository.title}
         h6.text-primary.text-center.section-title 

@@ -59,11 +59,27 @@ module.exports.StudentLoadFileToRepository = (req, res, next) => {
     });
 }
 
+function aaa(data, way) {
+  return Promise.all(
+    [data.map(function(item) {
+    if (fs.lstatSync(__dirname+'/../private/repositories/'+way+'/'+item).isDirectory())
+      return item;
+  }), data.map(function(item) {
+    if (fs.lstatSync(__dirname+'/../private/repositories/'+way+'/'+item).isFile())
+      return item;
+  })]);
+}
+
 module.exports.StudentGetFileRepository = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (user.role === STUDENT) {
-        //fs.
+        fs.readdir(__dirname+'../private/repositories/'+req.params.repositoryid+'/'+req.params.way, (err, data) => {
+          aaa(data).then(a => {
+            b = [a[0].filter(el => {return el != null;}), a[1].filter(el => {return el != null;})]
+            res.json(b);
+          })
+        })
       }
     })
 }
@@ -230,7 +246,12 @@ module.exports.StudentGetRepository = (req, res, next) => {
           .populate('section')
           .exec((err,repo) => {
             if (repo.user._id.toString() === user._id.toString()) {
-              return res.render('student/repository', {repository: repo, user: user});
+              fs.readdir(__dirname+'/../private/repositories/'+req.params.repositoryid, (err, data) => {
+                aaa(data, req.params.repositoryid).then(a => {
+                  return res.render('student/repository', {repository: repo, user: user, dirs: a[0].filter(el => {return el!=null;}), files: a[1].filter(el => {return el!=null;})});
+                })
+                
+              })
             }
           });
       }
@@ -299,9 +320,18 @@ module.exports.StudentNewRepositoryCreate = (req, res, next) => {
             .then(repo => {
               repo.section = Array.from(_Sections, x => GenerateSection(x, repo._id));
               repo.save(() => {
-
-                req.flash('success', 'Репозиторий создан.');
-                return res.redirect('/student');
+                ensureExists(__dirname+'/../private/repositories/'+repo.id, (err) => {
+                  if (err) 
+                    return res.json(err);
+                  _Sections.forEach(folder => {
+                    ensureExists(__dirname+'/../private/repositories/'+repo.id+'/'+folder, (err) => {
+                      if (err)
+                        return res.json(err);
+                    })
+                  })
+                  req.flash('success', 'Репозиторий создан.');
+                  return res.redirect('/student');
+                })
               });
             }).catch(next);
         }

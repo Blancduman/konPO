@@ -62,10 +62,10 @@ module.exports.StudentLoadFileToRepository = (req, res, next) => {
 function aaa(data, way) {
   return Promise.all(
     [data.map(function(item) {
-    if (fs.lstatSync(__dirname+'/../private/repositories/'+way+'/'+item).isDirectory())
+    if (fs.lstatSync(__dirname+'/../private/repositories/'+way+'/'+item, 'utf8').isDirectory())
       return item;
   }), data.map(function(item) {
-    if (fs.lstatSync(__dirname+'/../private/repositories/'+way+'/'+item).isFile())
+    if (fs.lstatSync(__dirname+'/../private/repositories/'+way+'/'+item, 'utf8').isFile())
       return item;
   })]);
 }
@@ -74,8 +74,8 @@ module.exports.StudentGetFileRepository = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (user.role === STUDENT) {
-        fs.readdir(__dirname+'../private/repositories/'+req.params.repositoryid+'/'+req.params.way, (err, data) => {
-          aaa(data).then(a => {
+        fs.readdir(__dirname+'../private/repositories/'+req.params.repositoryid+'/'+req.params.way, 'utf8', (err, data) => {
+          aaa(data, req.params.repositoryid).then(a => {
             b = [a[0].filter(el => {return el != null;}), a[1].filter(el => {return el != null;})]
             res.json({_dir: b[0], _file: b[1]});
           })
@@ -87,16 +87,46 @@ module.exports.StudentGetDirRepository = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (user.role === STUDENT) {
-        fs.readdir(__dirname+'../private/repositories/'+req.params.repositoryid+'/'+req.params.way, (err, data) => {
+        if (req.params.way === '0') {
+          fs.readdir(__dirname+'/../private/repositories/'+req.params.repositoryid, (err, data) => {
           if (data !== undefined) {
-            aaa(data).then(a => {
+            aaa(data, req.params.repositoryid).then(a => {
               b = [a[0].filter(el => {return el != null;}), a[1].filter(el => {return el != null;})]
               res.json({_dir: b[0], _file: b[1]});
             })
           } else res.json({_dir: [], _file: []});
-        })
+        });
+        } else {
+          fs.readdir(__dirname+'/../private/repositories/'+req.params.repositoryid+'/'+req.params.way, (err, data) => {
+            if (data !== undefined) {
+              aaa(data, req.params.repositoryid+'/'+req.params.way).then(a => {
+                b = [a[0].filter(el => {return el != null;}), a[1].filter(el => {return el != null;})]
+                res.json({_dir: b[0], _file: b[1]});
+              })
+            } else res.json({_dir: [], _file: []});
+          });
+        }
       }
     });
+}
+
+module.exports.StudentGetRepository = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === STUDENT) {
+        Repository.findById(req.params.repositoryid)
+          .populate('section')
+          .exec((err,repo) => {
+            if (repo.user._id.toString() === user._id.toString()) {
+              fs.readdir(__dirname+'/../private/repositories/'+req.params.repositoryid, (err, data) => {
+                aaa(data, req.params.repositoryid).then(a => {
+                  return res.render('student/repository', {repository: repo, user: user, dirs: a[0].filter(el => {return el!=null;}), files: a[1].filter(el => {return el!=null;})});
+                })
+              })
+            }
+          });
+      }
+    }).catch(next);
 }
 
 module.exports.StudentPostImageToProfile = (req, res, next) => {
@@ -182,6 +212,7 @@ module.exports.StudentEditProfile = (req, res, next) => {
           if (phone) user.phone = phone;
 
           user.save();
+          return res.render('student/profile', {user: user});
         }
       }
     }).catch(next);
@@ -248,27 +279,8 @@ module.exports.StudentManagerSectionTask = (req, res, next) => {
                 });
               });
             }
+            return res.json();
           }).catch(next);
-      }
-    }).catch(next);
-}
-
-module.exports.StudentGetRepository = (req, res, next) => {
-  User.findOne(req.user)
-    .then(user => {
-      if (user.role === STUDENT) {
-        Repository.findById(req.params.repositoryid)
-          .populate('section')
-          .exec((err,repo) => {
-            if (repo.user._id.toString() === user._id.toString()) {
-              fs.readdir(__dirname+'/../private/repositories/'+req.params.repositoryid, (err, data) => {
-                aaa(data, req.params.repositoryid).then(a => {
-                  return res.render('student/repository', {repository: repo, user: user, dirs: a[0].filter(el => {return el!=null;}), files: a[1].filter(el => {return el!=null;})});
-                })
-                
-              })
-            }
-          });
       }
     }).catch(next);
 }

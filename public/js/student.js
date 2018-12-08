@@ -56,24 +56,12 @@ $(document).ready(function() {
   });
   $('.dir-up-a').on('click', function(event) {
     event.preventDefault();
-    console.log('test');
-    var _url = $(this).attr('href');
-    var arr = _url.split('/');
     var adr = $(this).attr('href');
-    if (arr[arr.length-1].includes('folder')) {
-      $(this).attr('href', '#');
-    } else {
-      $(this).attr('href', arr.slice(0, -1).join('/'));
-    }
     //var dirname = $(this).text();
     $('.dir').remove();
     $('.file').remove();
     $.ajax({
-      url: adr,
-      method: 'get',
-      error: function(msg) {
-        console.log(msg);
-      }
+      url: adr
     })
     .done(function(data) {
       data._dir.forEach(item => {
@@ -81,23 +69,50 @@ $(document).ready(function() {
         var _td = $('<td/>').appendTo(_tr);
         $('<img/>').attr('src', 'http://localhost:3000/images/folder.png')
           .attr('alt', 'Папочка').attr('style', 'width: 5%;').appendTo(_td);
-        $('<a/>').attr('href', adr+'/'+item).attr('role', 'tab').addClass('text-light dir-get').text(item).appendTo(_td);
+        $('<a/>').attr('href', adr+'/'+item).attr('role', 'tab').addClass('text-light dir-get').text(item).on('click', func).appendTo(_td);
       });
       data._file.forEach(item => {
         var _tr = $('<tr/>').addClass('file').appendTo($('.table-table-table'));
         var _td = $('<td/>').appendTo(_tr);
         $('<img/>').attr('src', 'http://localhost:3000/images/file.png')
           .attr('alt', 'Файлик').attr('style', 'width: 5%;').appendTo(_td);
-        $('<a/>').attr('href', adr.replace('folder','file')+'/'+item).attr('role', 'tab').addClass('text-light').text(item).appendTo(_td);
+        $('<a/>').attr('href', adr.replace('folder','file')+'/'+item).attr('role', 'tab').addClass('text-light').text(item).on('click', func).appendTo(_td);
       });
-    })
+    });
   });
   $('.dir-get').on('click', function (event) {
     event.preventDefault();
-    var _url = $(this).attr('href');
-    $('.dir-up-a').attr('href', _url.split('/').slice(0, -1).join('/'));
+    var _url = $(this).attr('href').replace('/0/', '/');
     //var dirname = $(this).text();
-    var adr = $(this).attr('href');
+    var adr = $(this).attr('href').replace('/0/', '/');
+    $('.dir').remove();
+    $('.file').remove();
+    $.ajax({
+      url: _url,
+      method: 'get'
+    })
+    .done(function(data) {
+      data._dir.forEach(item => {
+        var _tr = $('<tr/>').addClass('dir').appendTo($('.table-table-table'));
+        var _td = $('<td/>').appendTo(_tr);
+        $('<img/>').attr('src', 'http://localhost:3000/images/folder.png')
+          .attr('alt', 'Папочка').attr('style', 'width: 5%;').appendTo(_td);
+        $('<a/>').attr('href', adr+'/'+item).attr('role', 'tab').addClass('text-light dir-get').text(item).on('click', func).appendTo(_td);
+      });
+      data._file.forEach(item => {
+        var _tr = $('<tr/>').addClass('file').appendTo($('.table-table-table'));
+        var _td = $('<td/>').appendTo(_tr);
+        $('<img/>').attr('src', 'http://localhost:3000/images/file.png')
+          .attr('alt', 'Файлик').attr('style', 'width: 5%;').appendTo(_td);
+        $('<a/>').attr('href', adr.replace('folder','file')+'/'+item).attr('role', 'tab').addClass('text-light').text(item).on('click', func).appendTo(_td);
+      });
+    })
+  })
+  function func(event) {
+    event.preventDefault();
+    var _url = $(this).attr('href').replace('/0/', '/');
+    //var dirname = $(this).text();
+    var adr = $(this).attr('href').replace('/0/', '/');
     $('.dir').remove();
     $('.file').remove();
     $.ajax({
@@ -120,7 +135,7 @@ $(document).ready(function() {
         $('<a/>').attr('href', adr.replace('folder','file')+'/'+item).attr('role', 'tab').addClass('text-light').text(item).appendTo(_td);
       });
     })
-  })
+  }
     //$.post($('.section-form').attr('action'), {tasks: daTa});
   
   // $('.delete-task').on('click', function(event) {

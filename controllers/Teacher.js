@@ -198,6 +198,7 @@ module.exports.TeacherEditProfile = (req, res, next) => {
           if (phone) user.phone = phone;
 
           user.save();
+          return res.render('teacher/profile', {user: user});
         }
       }
     }).catch(next);
@@ -244,7 +245,7 @@ module.exports.TeacherPostStudentActiveRepositorySection = (req, res, next) => {
                     
                   })
               }
-              return;
+              return res.redirect('/teacher');
             } else {
               return res.redirect('/teacher');
             }

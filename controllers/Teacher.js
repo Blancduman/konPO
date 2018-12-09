@@ -7,7 +7,8 @@ const uuidv4 = require('uuid/v4'),
   Message = mongoose.model('Message'),
   STUDENT = require('../constants').STUDENT,
   TEACHER = require('../constants').TEACHER,
-  _Sections = require('../constants').SECTIONS;
+  _Sections = require('../constants').SECTIONS,
+  fs = require('fs');
 
 module.exports.TeacherGetCurrentStudents = (req, res, next) => {
   User.findOne(req.user)
@@ -253,7 +254,16 @@ module.exports.TeacherPostStudentActiveRepositorySection = (req, res, next) => {
       }
     })
 }
-
+function aaa(data, way) {
+  return Promise.all(
+    [data.map(function(item) {
+    if (fs.lstatSync(__dirname+'/../private/repositories/'+way+'/'+item, 'utf8').isDirectory())
+      return item;
+  }), data.map(function(item) {
+    if (fs.lstatSync(__dirname+'/../private/repositories/'+way+'/'+item, 'utf8').isFile())
+      return item;
+  })]);
+}
 module.exports.TeacherGetStudentActiveRepository = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
@@ -266,10 +276,15 @@ module.exports.TeacherGetStudentActiveRepository = (req, res, next) => {
           .exec()
           .then(repo => {
             if (repo.user._id.toString() === req.params.studentid.toString()) {
-              return res.render('teacher/repository', {
-                repository: repo,
-                user: user
-              });
+              fs.readdir(__dirname+'/../private/repositories/'+req.params.repositoryid, (err, data) => {
+                aaa(data, req.params.repositoryid).then(a => {
+                  return res.render('teacher/repository', {repository: repo, user: user, dirs: a[0].filter(el => {return el!=null;}), files: a[1].filter(el => {return el!=null;})});
+                });
+              })
+              // return res.render('teacher/repository', {
+              //   repository: repo,
+              //   user: user
+              // });
             } else {
               return res.redirect('/teacher');
             }
@@ -447,4 +462,40 @@ module.exports.TeacherDownloadStudentClosedRepository = (req, res, next) => {
           }).catch(next);
       }
     }).catch(next);
+}
+
+module.exports.TeacherGetDirRepository = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === TEACHER) {
+        if (req.params.way === '0') {
+          fs.readdir(__dirname+'/../private/repositories/'+req.params.repositoryid, (err, data) => {
+          if (data !== undefined) {
+            aaa(data, req.params.repositoryid).then(a => {
+              b = [a[0].filter(el => {return el != null;}), a[1].filter(el => {return el != null;})]
+              res.json({_dir: b[0], _file: b[1]});
+            })
+          } else res.json({_dir: [], _file: []});
+        });
+        } else {
+          fs.readdir(__dirname+'/../private/repositories/'+req.params.repositoryid+'/'+req.params.way + req.params[0], (err, data) => {
+            if (data !== undefined) {
+              aaa(data, req.params.repositoryid+'/'+req.params.way + req.params[0]).then(a => {
+                b = [a[0].filter(el => {return el != null;}), a[1].filter(el => {return el != null;})]
+                res.json({_dir: b[0], _file: b[1]});
+              })
+            } else res.json({_dir: [], _file: []});
+          });
+        }
+      }
+    })
+}
+
+module.exports.TeacherGetFileRepository = (req, res, next) => {
+  User.findOne(req.user)
+  .then(user => {
+    if (user.role === TEACHER) {
+      res.download(__dirname+'/../private/repositories/'+req.params.repositoryid+'/'+req.params.way+req.params[0]);
+    }
+  });
 }

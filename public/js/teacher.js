@@ -169,8 +169,34 @@ $(document).ready(function() {
     });
     window.location.replace(ap+"student");
   });
-  // $('.delete-task').on('click', function(event) {
-  //   console.log(event.target);
-  //   $(event.target).parent().remove();
-  // })
+
+
+  $('.dir-up-a').on('click', func);
+  $('.dir-get').on('click', func);
+  function func(event) {
+    event.preventDefault();
+    var adr = $(this).attr('href').replace('/0/', '/');
+    $('.dir').remove();
+    $('.file').remove();
+    $.ajax({
+      url: adr
+    })
+    .done(function(data) {
+      data._dir.forEach(item => {
+        var _tr = $('<tr/>').addClass('dir').appendTo($('.table-table-table'));
+        var _td = $('<td/>').appendTo(_tr);
+        $('<img/>').attr('src', 'http://localhost:3000/images/folder.png')
+          .attr('alt', 'Папочка').attr('style', 'width: 5%;').appendTo(_td);
+        $('<a/>').attr('href', adr+'/'+item).attr('role', 'tab').addClass('text-light dir-get').text(item).on('click', func).appendTo(_td);
+      });
+      data._file.forEach(item => {
+        var newadr = adr.replace('folder','file')+'/'+item;
+        var _tr = $('<tr/>').addClass('file').appendTo($('.table-table-table'));
+        var _td = $('<td/>').appendTo(_tr);
+        $('<img/>').attr('src', 'http://localhost:3000/images/file.png')
+          .attr('alt', 'Файлик').attr('style', 'width: 5%;').appendTo(_td);
+        $('<a/>').attr('href', newadr).attr('role', 'tab').addClass('text-light').text(item).appendTo(_td);
+      });
+    })
+  }
 });

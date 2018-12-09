@@ -15,6 +15,7 @@ const router = require('express').Router(),
       StudentGetFileRepository,
       StudentPostFilesToRepositoryDir,
       StudentGetDirRepository,
+      StudentDeleteFileRepository,
       StudentPostImageToProfile } = require('../controllers/Student');
 
 router.get('/', isAuth, StudentGetRepositories);
@@ -27,6 +28,8 @@ router.put('/repository/:repositoryid/:sectionid', isAuth, StudentManagerSection
 router.get('/repository/:repositoryid', isAuth, StudentGetRepository);
 router.get('/repository/:repositoryid/folder/:way*', isAuth, StudentGetDirRepository);
 router.post('/repository/:repositoryid/folder/:way*', isAuth, StudentPostFilesToRepositoryDir);
+router.get('/repository/:repositoryid/file/:way*', isAuth, StudentGetFileRepository);
+router.delete('/repository/:repositoryid/file/:way*', isAuth, StudentDeleteFileRepository);
 
 router.get('/accessed_repositories', isAuth, StudentGetAccessedRepositories);
 router.get('/accessed_repositories/:repositoryid', isAuth, StudentDownloadAccessedRepository);

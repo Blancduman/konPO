@@ -87,12 +87,31 @@ $(document).ready(function() {
         $('<a/>').attr('href', adr+'/'+item).attr('role', 'tab').addClass('text-light dir-get').text(item).on('click', func).appendTo(_td);
       });
       data._file.forEach(item => {
+        var newadr = adr.replace('folder','file')+'/'+item;
         var _tr = $('<tr/>').addClass('file').appendTo($('.table-table-table'));
         var _td = $('<td/>').appendTo(_tr);
         $('<img/>').attr('src', 'http://localhost:3000/images/file.png')
           .attr('alt', 'Файлик').attr('style', 'width: 5%;').appendTo(_td);
-        $('<a/>').attr('href', adr.replace('folder','file')+'/'+item).attr('role', 'tab').addClass('text-light').text(item).on('click', func).appendTo(_td);
+        $('<a/>').attr('href', newadr).attr('role', 'tab').addClass('text-light').text(item).appendTo(_td);
+        $('<button/>').addClass('btn btn-secondary delete-file p-1 float-right').text('X').on('click', function(event) {
+          $.ajax({
+            url: newadr.replace('/file/0/', '/file/'),
+            type: 'delete'
+          })
+          .always(function() {
+            _tr.remove();
+          })
+        }).appendTo(_td);
       });
     })
   }
+  $('.delete-file').on('click', function() {
+    $.ajax({
+      url: $(this).prev("a").attr('href'),
+      type: 'delete'
+    })
+    .always(function() {
+      $(this).parent('tr').remove();
+    })
+  })
 });

@@ -37,9 +37,9 @@ module.exports.StudentPostFilesToRepositoryDir = (req, res, next) => {
       if (user.role === STUDENT) {
         if (req.params.way === '0') {
           var form = new formidable.IncomingForm();
-          form.parse(req);
           form.uploadDir = path.join(__dirname, "/../private/tmp");
-          form.maxFileSize = 25 * 1024 * 1024;
+          form.maxFileSize = 50 * 1024 * 1024;
+          form.maxFields = 20;
 
           form.on("fileBegin", (err, file) => {
             var fileNewName  = Date.now() + "_" + file.name;
@@ -50,20 +50,28 @@ module.exports.StudentPostFilesToRepositoryDir = (req, res, next) => {
             
             file.path = path.join(__dirname, fileLoadFile + fileNewName);
           });
+          form.on('file', (field, file) => {
+            console.log(file.name);
+          })
+          form.on('field', (field, value) => {
+            console.log([field, file]);
+          })
           form.on('end', () => {
             res.redirect('/student/repository/'+req.params.repositoryid);
           });
           form.on('error', (err) => {
             res.send(err);
           });
+          
+          form.parse(req);
         } else {
           var form = new formidable.IncomingForm();
-          form.parse(req);
           form.uploadDir = path.join(__dirname, "/../private/tmp");
-          form.maxFileSize = 25 * 1024 * 1024;
+          form.maxFileSize = 50 * 1024 * 1024;
+          form.maxFields = 20;
 
           form.on("fileBegin", (err, file) => {
-            var fileNewName  = file.name + "_" + Date.now();
+            var fileNewName  = Date.now() + "_" + file.name;
             var fileLoadFile = "/../private/repositories/" + req.params.repositoryid + "/" + req.params.way;
             ensureExists(__dirname +  fileLoadFile, err => {
               if (err) console.log(err);
@@ -71,12 +79,19 @@ module.exports.StudentPostFilesToRepositoryDir = (req, res, next) => {
             
             file.path = path.join(__dirname, fileLoadFile +'/'+ fileNewName);
           });
+          form.on('file', (field, file) => {
+            console.log(file.name);
+          })
+          form.on('field', (field, value) => {
+            console.log([field, file]);
+          })
           form.on('end', () => {
             res.redirect('/student/repository/'+req.params.repositoryid);
           });
           form.on('error', (err) => {
             res.send(err);
           });
+          form.parse(req);
         }
       }
     })
@@ -93,16 +108,25 @@ function aaa(data, way) {
   })]);
 }
 
+module.exports.StudentDeleteFileRepository = (req, res, next) => {
+  User.findOne(req.user)
+    .then(user => {
+      if (user.role === STUDENT) {
+        fs.exists(__dirname+'/../private/repositories/'+req.params.repositoryid+'/'+req.params.way+req.params[0], (exists) => {
+          fs.unlink(__dirname+'/../private/repositories/'+req.params.repositoryid+'/'+req.params.way+req.params[0], (err) => {
+            if (err) console.log(err);
+            return res.end();
+          });
+        });
+      }
+    })
+}
+
 module.exports.StudentGetFileRepository = (req, res, next) => {
   User.findOne(req.user)
     .then(user => {
       if (user.role === STUDENT) {
-        fs.readdir(__dirname+'../private/repositories/'+req.params.repositoryid+'/'+req.params.way, 'utf8', (err, data) => {
-          aaa(data, req.params.repositoryid).then(a => {
-            b = [a[0].filter(el => {return el != null;}), a[1].filter(el => {return el != null;})]
-            res.json({_dir: b[0], _file: b[1]});
-          })
-        })
+        res.download(__dirname+'/../private/repositories/'+req.params.repositoryid+'/'+req.params.way+req.params[0]);
       }
     });
 }

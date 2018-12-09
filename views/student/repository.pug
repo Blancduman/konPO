@@ -28,6 +28,8 @@ block content
                   td
                     img(src="http://localhost:3000/images/folder.png", alt="Папочка", style="width: 5%;")
                     a(href=repository.id+'/folder/'+dir, role="tab").text-light.dir-get #{dir}
+                  td
+                    form(action="")
             if files
               each file in files
                 tr.file

@@ -24,7 +24,7 @@ router.post('/new_repository', isAuth, StudentNewRepositoryCreate);
 router.get('/repository/:repositoryid/:sectionid', isAuth, StudentGetSectionTask);
 router.put('/repository/:repositoryid/:sectionid', isAuth, StudentManagerSectionTask);
 router.get('/repository/:repositoryid', isAuth, StudentGetRepository);
-router.get('/repository/:repositoryid/folder/:way', isAuth, StudentGetDirRepository);
+router.get('/repository/:repositoryid/folder/:way*', isAuth, StudentGetDirRepository);
 
 router.get('/accessed_repositories', isAuth, StudentGetAccessedRepositories);
 router.get('/accessed_repositories/:repositoryid', isAuth, StudentDownloadAccessedRepository);

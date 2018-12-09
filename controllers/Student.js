@@ -97,9 +97,9 @@ module.exports.StudentGetDirRepository = (req, res, next) => {
           } else res.json({_dir: [], _file: []});
         });
         } else {
-          fs.readdir(__dirname+'/../private/repositories/'+req.params.repositoryid+'/'+req.params.way, (err, data) => {
+          fs.readdir(__dirname+'/../private/repositories/'+req.params.repositoryid+'/'+req.params.way + req.params[0], (err, data) => {
             if (data !== undefined) {
-              aaa(data, req.params.repositoryid+'/'+req.params.way).then(a => {
+              aaa(data, req.params.repositoryid+'/'+req.params.way + req.params[0]).then(a => {
                 b = [a[0].filter(el => {return el != null;}), a[1].filter(el => {return el != null;})]
                 res.json({_dir: b[0], _file: b[1]});
               })

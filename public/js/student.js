@@ -7,7 +7,6 @@ $(document).ready(function() {
       type: 'get'
     })
     .done(function(data) {
-      console.log(data);
       $('.form-control.bg-dark.border-0').empty();
       $('.text-primary.text-center.section-title').text(data.name);
       $('.task-list').empty();
@@ -54,72 +53,30 @@ $(document).ready(function() {
         }
     });
   });
-  $('.dir-up-a').on('click', func);
-  // function(event) {
+  // $('.post-file-here').submit(function(event) {
   //   event.preventDefault();
-  //   var adr = $(this).attr('href');
-  //   //var dirname = $(this).text();
-  //   $('.dir').remove();
-  //   $('.file').remove();
+  //   var adr = $(this).attr('action');
+  //   var check = adr.split('/');
+  //   if (!check[check.length-1].includes('0')) {
+  //     adr = adr.replace('/0/', '/');
+  //   }
   //   $.ajax({
-  //     url: adr
-  //   })
-  //   .done(function(data) {
-  //     data._dir.forEach(item => {
-  //       var _tr = $('<tr/>').addClass('dir').appendTo($('.table-table-table'));
-  //       var _td = $('<td/>').appendTo(_tr);
-  //       $('<img/>').attr('src', 'http://localhost:3000/images/folder.png')
-  //         .attr('alt', 'Папочка').attr('style', 'width: 5%;').appendTo(_td);
-  //       $('<a/>').attr('href', adr+'/'+item).attr('role', 'tab').addClass('text-light dir-get').text(item).on('click', func).appendTo(_td);
-  //     });
-  //     data._file.forEach(item => {
-  //       var _tr = $('<tr/>').addClass('file').appendTo($('.table-table-table'));
-  //       var _td = $('<td/>').appendTo(_tr);
-  //       $('<img/>').attr('src', 'http://localhost:3000/images/file.png')
-  //         .attr('alt', 'Файлик').attr('style', 'width: 5%;').appendTo(_td);
-  //       $('<a/>').attr('href', adr.replace('folder','file')+'/'+item).attr('role', 'tab').addClass('text-light').text(item).on('click', func).appendTo(_td);
-  //     });
+  //     url: adr,
+  //     type: 'POST',
+  //     data: $(this).serializeArray(),
+  //     dataType: 'json'
   //   });
-  // });
-  $('.dir-get').on('click', func);
-  // function (event) {
-  //   event.preventDefault();
-  //   var _url = $(this).attr('href').replace('/0/', '/');
-  //   //var dirname = $(this).text();
-  //   var adr = $(this).attr('href').replace('/0/', '/');
-  //   $('.dir').remove();
-  //   $('.file').remove();
-  //   $.ajax({
-  //     url: _url,
-  //     method: 'get'
-  //   })
-  //   .done(function(data) {
-  //     data._dir.forEach(item => {
-  //       var _tr = $('<tr/>').addClass('dir').appendTo($('.table-table-table'));
-  //       var _td = $('<td/>').appendTo(_tr);
-  //       $('<img/>').attr('src', 'http://localhost:3000/images/folder.png')
-  //         .attr('alt', 'Папочка').attr('style', 'width: 5%;').appendTo(_td);
-  //       $('<a/>').attr('href', adr+'/'+item).attr('role', 'tab').addClass('text-light dir-get').text(item).on('click', func).appendTo(_td);
-  //     });
-  //     data._file.forEach(item => {
-  //       var _tr = $('<tr/>').addClass('file').appendTo($('.table-table-table'));
-  //       var _td = $('<td/>').appendTo(_tr);
-  //       $('<img/>').attr('src', 'http://localhost:3000/images/file.png')
-  //         .attr('alt', 'Файлик').attr('style', 'width: 5%;').appendTo(_td);
-  //       $('<a/>').attr('href', adr.replace('folder','file')+'/'+item).attr('role', 'tab').addClass('text-light').text(item).on('click', func).appendTo(_td);
-  //     });
-  //   })
   // })
+  $('.dir-up-a').on('click', func);
+  $('.dir-get').on('click', func);
   function func(event) {
     event.preventDefault();
-    var _url = $(this).attr('href').replace('/0/', '/');
-    //var dirname = $(this).text();
     var adr = $(this).attr('href').replace('/0/', '/');
+    $('.post-file-here').attr('action', adr);
     $('.dir').remove();
     $('.file').remove();
     $.ajax({
-      url: _url,
-      method: 'get'
+      url: adr
     })
     .done(function(data) {
       data._dir.forEach(item => {
@@ -138,10 +95,4 @@ $(document).ready(function() {
       });
     })
   }
-    //$.post($('.section-form').attr('action'), {tasks: daTa});
-  
-  // $('.delete-task').on('click', function(event) {
-  //   console.log(event.target);
-  //   $(event.target).parent().remove();
-  // })
 });

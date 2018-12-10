@@ -10,5 +10,5 @@ block content
             h6.text-light Дал поступ 
               each teacher in repository.teacher
                 b.text-success #{teacher.lastname} #{teacher.firstname} #{teacher.middlename};
-            a(href="/repository/access/"+repository._id style="cursor: pointer;").text-light
+            a(href="accessed_repositories/"+repository._id style="cursor: pointer;").text-light
               b Скачать

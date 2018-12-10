@@ -351,7 +351,7 @@ module.exports.TeacherGetClosedStudentsRepositories = (req, res, next) => {
           .exec()
           .then(repos => {
             return res.render('teacher/closed', {
-              students: repos,
+              students: repos.filter((set => f => !set.has(f.user) && set.add(f.user))(new Set)),
               user: user
             });
           });
@@ -477,15 +477,16 @@ module.exports.TeacherDownloadStudentClosedRepository = (req, res, next) => {
       if (user.role === TEACHER) {
         Repository.findById(req.params.repositoryid)
           .populate('user')
-          .exec(repo => {
-            if (repo.user._id === req.params.studentid) {
-              if (repo.teacher.includes(user)) {
-                return res.send('SOON');
+          .exec()
+          .then(repo => {
+            if (repo.user.id === req.params.studentid) {
+              if (repo.teacher.indexOf(user._id) !== -1) {
+                return res.download(__dirname+'/../private/archives/'+req.params.repositoryid+".zip");
               }
             } else {
               return res.redirect('/teacher/student/closed');
             }
-          }).catch(next);
+          })
       }
     }).catch(next);
 }

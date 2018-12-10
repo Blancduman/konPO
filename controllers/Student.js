@@ -288,8 +288,9 @@ module.exports.StudentDownloadAccessedRepository = (req, res, next) => {
       if (user.role === STUDENT) {
         Repository.findOne({access: user._id, status: false, _id: req.params.repositoryid})
           .then(repos => {
-            return res.send(repos);
-          }).catch(next);
+            if (repos !== undefined)
+              res.download(__dirname +'/../private/archives/'+req.params.repositoryid+".zip");
+          })
       }
     }).catch(next);
 }

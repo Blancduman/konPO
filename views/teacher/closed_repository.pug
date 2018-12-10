@@ -2,14 +2,16 @@ extends ./includes/layout
 
 block content
   .row
-    h3.text-center.text-primary #{repository.user.lastname} #{repository.user.firstname} #{repository.user.middlename}:
-      a(href="/teacher/closed/download/"+repository.user._id+"/"+repository._id, style="text-decoration: underline;") Скачать
-    form(action="/teacher/closed/"+repository.user._id+"/"+repository._id, method="post").rounded.text-white
-      .form-group
-        select(multiple, name="duallistbox")
-          each user in users
-            option(value=user._id) #{user.lastname} #{user.firstname} #{user.middlename}
-          each user in access
-            option(value=user._id, selected) #{user.lastname} #{user.firstname} #{user.middlename}
-      .form-group
-        button(type="submit").btn.btn-primary Сохранить
+    .col-11.mx-auto
+      h3.text-center.text-primary #{repository.user.lastname} #{repository.user.firstname} #{repository.user.middlename}:
+        a(href="/teacher/closed/download/"+repository.user._id+"/"+repository._id, style="text-decoration: underline;") Скачать
+    .col-11.mx-auto
+      form(action="/teacher/closed/"+repository.user._id+"/"+repository._id, method="post").rounded.text-white
+        .form-group
+          select(multiple, name="duallistbox")
+            each user in users
+              option(value=user._id) #{user.lastname} #{user.firstname} #{user.middlename}
+            each user in access
+              option(value=user._id, selected) #{user.lastname} #{user.firstname} #{user.middlename}
+        .form-group
+          button(type="submit").btn.btn-primary Сохранить

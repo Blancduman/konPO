@@ -8,7 +8,9 @@ const uuidv4 = require('uuid/v4'),
   STUDENT = require('../constants').STUDENT,
   TEACHER = require('../constants').TEACHER,
   _Sections = require('../constants').SECTIONS,
-  fs = require('fs');
+  fs = require('fs'),
+  archiver = require('archiver'),
+  rimraf = require('rimraf');
 
 module.exports.TeacherGetCurrentStudents = (req, res, next) => {
   User.findOne(req.user)
@@ -300,10 +302,34 @@ module.exports.TeacherCloseStudentRepository = (req, res, next) => {
         Repository.findById(req.params.repositoryid)
           .then(repo => {
             if (repo.user._id.toString() === req.params.studentid.toString()) {
-              repo.status = false;
+              var output = fs.createWriteStream(__dirname+'/../private/archives/'+req.params.repositoryid+'.zip');
+              archive = archiver('zip', {
+                zlib: { level: 9 }
+              });
+              
+              output.on('close', function() {
+                repo.status = true;
+                repo.save();
+                rimraf(__dirname+'/../private/repositories/'+req.params.repositoryid, function() {console.log('done');res.redirect('/teacher');});
+              });
+              archive.on('warning', function(err) {
+                if (err.code === 'ENOENT') {
+                  console.log(err);
+                } else {
+                  console.log(err);
+                  repo.status = true;
+                  repo.save();
+                  res.redirect('/teacher');
+                }
+              });
+              archive.on('error', function(err) {
+                console.log(err);
+              });
+              archive.pipe(output);
+              archive.directory(__dirname+'/../private/repositories/'+req.params.repositoryid, false);
+              archive.finalize();
+
               //archive repo
-              repo.save();
-              res.redirect('/teacher');
             }
           })
       }

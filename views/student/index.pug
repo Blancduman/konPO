@@ -10,4 +10,4 @@ block content
             h6.text-light
               each teacher in repository.teacher
                 |#{teacher.lastname} #{teacher.firstname} #{teacher.middlename};
-            p.text-warning #{repository.updatedAt}
+            p.text-warning #{repository.updatedAt.toLocaleString()}

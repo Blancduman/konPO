@@ -7,17 +7,14 @@ block content
         each section in repository.section
           a(href="/teacher/active/"+repository.user._id+"/"+repository._id + "/" + section._id, role="tab", class="section-select").list-group-item.list-group-item-action.bg-dark.pb-0
             h6.text-primary #{section.name}
-            p.text-success #{section.updatedAt}
+            p.text-success #{section.updatedAt.toLocaleString().toLocaleString()}
 
     .col-md-5.col-lg-5.col-sm-12
       .form-group
         button(type="button", data-toggle="modal" data-target="#suremodal").btn.btn-primary Закрыть
       nav(aria-label="breadcrumb", data-toggle="tooltip", data-placement="top", title="Путь раздела.")
         ol(style="background-color:rgb(151, 153, 155); border-color:#e38c8c !important;").breadcrumb.bg-dark.border
-          if path
-            each folder in path
-              li.breadcrumb-item #{folder}
-          li.breadcrumb-item.active #{currentFolder}
+          
       table.table.table-dark
         tbody(role="tablist").table-table-table
           tr.dir-up
@@ -35,7 +32,6 @@ block content
                 td
                   img(src="http://localhost:3000/images/file.png", alt="Файлик", style="width: 5%;")
                   a(href=repository.id+'/file/'+file, role="tab").text-light #{file}
-                  button.btn.btn-secondary.delete-file-p-1.float-right X
     div(style="border-color:#e38c8c !important; border-radius: 10px;").col-md-4.col-lg-4.col-sm-12.border
       h2.text-primary.text-center.mb-0 #{repository.title}
       h6.text-primary.text-center.section-title 

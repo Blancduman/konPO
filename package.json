@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index"
+    "start": "nodemon index",
+    "boi": "extract-mongo-schema -d \"mongodb://localhost:27017/test\" -o schema.html -f html-diagram"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "extract-mongo-schema": "^0.2.7",
     "nodemon": "^1.18.7"
   }
 }

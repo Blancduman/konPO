@@ -8,16 +8,14 @@ const UserSchema = new mongoose.Schema({
     lowercase: true,
     unique: true,
     required: [true, 'Логин не может быть пустым!'],
-    match: [/^[a-zA-Z0-9]+$/, 'is valid'],
-    index: true
+    match: [/^[a-zA-Z0-9]+$/, 'is valid']
   },
   email: {
     type: String,
     lowercase: true,
     unique: true,
     required: [true, 'не может быть пустым!'],
-    match: [/\S+@\S+\.\S+/, 'is valid'],
-    index: true
+    match: [/\S+@\S+\.\S+/, 'is valid']
   },
   firstname: String,
   lastname: String,

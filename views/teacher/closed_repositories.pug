@@ -10,7 +10,7 @@ block content
           each repository in repositories
             a(href='/teacher/closed/' + student._id +'/' +repository._id, role="tab").list-group-item.list-group-item-action.bg-dark
               h3.text-primary #{repository.title}
-              p.text-warning #{repository.updatedAt}
+              p.text-warning #{repository.updatedAt.toLocaleString()}
                 
         else 
           h2.text-primary Пока нет репозиториев

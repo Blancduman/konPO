@@ -8,15 +8,11 @@ block content
           each section in repository.section
             a(href="/student/repository/"+repository._id + "/" + section._id, role="tab", class="section-select").list-group-item.list-group-item-action.bg-dark.pb-0
               h6.text-primary #{section.name}
-              p.text-success #{section.updatedAt}
+              p.text-success #{section.updatedAt.toLocaleString()}
 
       .col-md-5.col-lg-5.col-sm-12
         nav(aria-label="breadcrumb", data-toggle="tooltip", data-placement="top", title="Путь раздела.")
           ol(style="background-color:rgb(151, 153, 155); border-color:#e38c8c !important;").breadcrumb.bg-dark.border
-            if path
-              each folder in path
-                li.breadcrumb-item #{folder}
-            li.breadcrumb-item.active #{currentFolder}
         table.table.table-dark
           tbody(role="tablist").table-table-table
             tr

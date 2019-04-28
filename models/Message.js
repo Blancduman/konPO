@@ -5,7 +5,7 @@ var MessageSchema = new mongoose.Schema({
   repository: {
     type: mongoose.Schema.Types.ObjectId, ref: 'Repository'
   },
-  user: {
+  author: {
     type: mongoose.Schema.Types.ObjectId, ref: 'User'
   },
   status: {

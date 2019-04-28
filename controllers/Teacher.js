@@ -10,7 +10,9 @@ const uuidv4 = require('uuid/v4'),
   _Sections = require('../constants').SECTIONS,
   fs = require('fs'),
   archiver = require('archiver'),
-  rimraf = require('rimraf');
+  formidable = require('formidable')
+  rimraf = require('rimraf'),
+  path = require('path');
 
 module.exports.TeacherGetCurrentStudents = (req, res, next) => {
   User.findOne(req.user)
@@ -308,7 +310,7 @@ module.exports.TeacherCloseStudentRepository = (req, res, next) => {
               });
               
               output.on('close', function() {
-                repo.status = true;
+                repo.status = false;
                 repo.save();
                 rimraf(__dirname+'/../private/repositories/'+req.params.repositoryid, function() {console.log('done');res.redirect('/teacher');});
               });

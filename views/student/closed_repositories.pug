@@ -7,9 +7,9 @@ block content
         if repositories
           each repository in repositories
             div(role="tab").list-group-item.bg-dark
-              h3.text-primary #{repository.name}
+              h3.text-primary #{repository.title}
               h6.text-light Закрыто преподавателем
               each teacher in repository.teacher
                 b.text-success #{teacher.lastname} #{teacher.firstname} #{teacher.middlename};
-              p.text-light #{repository.updatedAt}
+              p.text-light #{repository.updatedAt.toLocaleString()}
               a(href="/student/closed_repository/"+repository._id, title="скачать")
